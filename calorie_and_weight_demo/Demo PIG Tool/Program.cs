@@ -28,13 +28,12 @@ Work Flow:
 
 
 
+/*--------------------------------------Text Prompts and Menu Traversal--------------------------------------*/
 
 void greetings()
 {
     Console.WriteLine("Hello! This is a Health Tracking Tool.");
-    Console.WriteLine("You can log your daily calories, weight, and analyze your health data.");
-    Console.WriteLine();
-
+    Console.WriteLine("You can log your daily calories, weight, and analyze your health data.\n");
     terminalMenu();
 }
 
@@ -45,7 +44,7 @@ void terminalMenu()
     Console.WriteLine("Press 1 to view your 'Health Logs'");
     Console.WriteLine("Press 2 to input new today's data");
 
-    choice1 = int.Parse(Console.ReadLine()); // (works for demo; TryParse is safer)
+    choice1 = int.Parse(Console.ReadLine());
 
     if (choice1 == 1)
     {
@@ -60,16 +59,11 @@ void terminalMenu()
     }
 }
 
-
-
-
 void displayHealthLogs()
 {
     clearCLIScreen();
 
-
     Console.WriteLine("\t\t --- Health Logs ---\n");
-
 
     /*      -- Covert to struct or tuple for better data handling later --
     foreach (var dateLog in healthLogs)
@@ -104,11 +98,18 @@ void displayHealthLogs()
         terminalMenu();
     }
 }
+/*-----------------------------------------------------------------------------------------------------------*/
+
+
+
+string GetProjectHealthLogPath()
+{
+    return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "healthlogs.txt"));
+}
 
 string getHealthLogs()
 {
-    //stores sample data for demo purposes - formatted as (date[YYYYMMDD], weight, calories)
-    string path = "healthlogs.txt";
+    string path = GetProjectHealthLogPath();
     if (File.Exists(path))
     {
         string readText = File.ReadAllText(path);
@@ -116,12 +117,8 @@ string getHealthLogs()
         return readText;
     }
 
-    else
-    {
-        Console.WriteLine("Log file not found.");
-        return "";
-    }
-
+    Console.WriteLine("Log file not found.");
+    return "";
 }
 
 void clearCLIScreen()
@@ -131,16 +128,7 @@ void clearCLIScreen()
 
 
 
-
-
-
-
-
-
-
-
 //---------------------------------------------Logging Functions---------------------------------------------
-
 string logDate()
 {
     DateTime now = DateTime.Now;
@@ -150,18 +138,22 @@ string logDate()
 
 float logWeight()
 {
-    Console.WriteLine("Weight (lbs): ");
+    Console.Write("Weight (lbs): ");
     float currentWeight = float.Parse(Console.ReadLine());
     return currentWeight;
 }
 
 float logCalories()
 {
-    Console.WriteLine("Calories Burned: ");
+    Console.Write("Calories Burned: ");
     float caloriesBurned = float.Parse(Console.ReadLine());
     return caloriesBurned;
 }
+/*---------------------------------------------------------------------------------------------------------*/
 
+
+
+//---------------------------------------------Path & .txt Functions---------------------------------------------
 
 void inputNewHealthData()
 {
@@ -170,33 +162,24 @@ void inputNewHealthData()
     Console.WriteLine("Log Today's Health Data");
     Console.WriteLine("Today's Date: " + logDate());
 
-    
     float currentWeight = logWeight();
     float caloriesConsumed = logCalories();
 
     //store data to file healthlogs.txt
     submitHealthData(logDate(), currentWeight, caloriesConsumed);
-
+ 
     Console.WriteLine("New health data logged successfully!");
 }
 
 void submitHealthData(string date, float weight, float calories)
 {
-    string path = "healthlogs.txt";
+    string path = GetProjectHealthLogPath();
     using (StreamWriter sw = File.AppendText(path))
     {
-        sw.WriteLine(date + "\t\t " + weight + "\t\t\t" + calories);
+        sw.WriteLine(date + "	     " + weight + "       	" + calories);
     }
 }
 /*---------------------------------------------------------------------------------------------------------*/
-
-
-/*
-float calculateCalorieIntake(float totalCalories, int days)
-{
-    return totalCalories / days;
-}
-*/
 
 Console.WriteLine("Welcome to the Calorie and Weight Tracker!");
 greetings();
