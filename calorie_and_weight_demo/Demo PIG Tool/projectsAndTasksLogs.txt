@@ -1,0 +1,9 @@
+PROJECT|1|PIG Tool|True|False|5/8/2026 12:00:00 AM|100
+PROJECT|2|NFA Project|True|False|9/27/2026 12:00:00 AM|7
+PROJECT|3|DFA Project|False|True|2/5/2026 12:00:00 AM|2
+PROJECT|4|French Project|True|False|4/4/2026 1:40:01 PM|0.7
+PROJECT|5|Spanish Project|True|False|7/7/2026 9:50:00 PM|5
+PROJECT|6|German Project|False|False|4/4/2026 3:40:00 PM|2
+TASK|1|Project and Task Management Sub-Tool|True|True|2/2/2026 12:00:00 AM|5|-1
+TASK|2|Budget Tool|True|True|2/2/2026 12:00:00 AM|0.3|1
+TASK|3|Calorie Tracker|True|True|2/2/2026 12:00:00 AM|0.5|1

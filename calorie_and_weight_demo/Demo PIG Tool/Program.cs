@@ -9,7 +9,8 @@ using Demo_PIG_Tool.Utils;
 
 
 
-List<HealthLog> healthLogs = new();
+List<UtilsProject> projects = new();
+List<UtilsTask> tasks = new();
 
 /*  1/28/26 - Collin
 
@@ -48,15 +49,15 @@ void terminalMenu()
     {
         case 1:
             UtilsText.ClearScreen();
-            displayHealthLogs();
+            displayProjectsAndTasks();
             break;
         case 2:
             UtilsText.ClearScreen();
-            inputNewHealthData();
+            createATask();
             break;
         case 3:
             UtilsText.ClearScreen();
-            UtilsText.FeatureComingSoon();
+            createAProject();
             terminalMenu();
             break;
         case 4:
@@ -72,13 +73,13 @@ void terminalMenu()
     }
 }
 
-void displayHealthLogs()
+void displayProjectsAndTasks()
 {
     UtilsText.ClearScreen();
-    Console.WriteLine("\t\t --- Health Logs ---\n");
+    Console.WriteLine("\t\t --- Projects and Tasks ---\n");
 
-    string healthLogs = getHealthLogs();    // populate healthLogs list
-    Console.WriteLine(healthLogs);          // display healthLogs data
+    string projectsAndTasksLogs = getProjectsAndTasksLogs();    // populate healthLogs list
+    Console.WriteLine(projectsAndTasksLogs);          // display healthLogs data
 
     terminalMenu();
 }
@@ -86,18 +87,17 @@ void displayHealthLogs()
 
 
 
-string GetProjectHealthLogPath()
+string GetProjectsAndTasksLogPath()
 {
-    return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "healthlogs.txt"));
+    return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "projectsAndTasksLogs.txt"));
 }
 
-string getHealthLogs()
+string getProjectsAndTasksLogs()
 {
-    string path = GetProjectHealthLogPath();
+    string path = GetProjectsAndTasksLogPath();
     if (File.Exists(path))
     {
         string readText = File.ReadAllText(path);
-        Console.WriteLine(readText);
         return readText;
     }
 
@@ -105,52 +105,120 @@ string getHealthLogs()
     return "";
 }
 
-
-//---------------------------------------------Logging Functions---------------------------------------------
-float getWeight()    //validate input data here!!!
+void loadData()
 {
-    UtilsText.LogHealthData(2);
-    float currentWeight = float.Parse(Console.ReadLine());
-    return currentWeight;
+    string path = GetProjectsAndTasksLogPath();
+    if (File.Exists(path))
+    {
+        using(StreamReader sr = File.OpenText(path))
+        {
+            string s = "";
+            while ((s = sr.ReadLine()) != null)
+            {
+                string[] entries = s.Split('|');
+                if (entries[0] == "PROJECT")
+                {
+                    projects.Add(new UtilsProject(
+                        int.Parse(entries[1]),
+                        entries[2],
+                        bool.Parse(entries[3]),
+                        bool.Parse(entries[4]),
+                        DateTime.Parse(entries[5]),
+                        float.Parse(entries[6])
+                    ));
+                }
+                else if (entries[0] == "TASK")
+                {
+                    tasks.Add(new UtilsTask(
+                        int.Parse(entries[1]),
+                        entries[2],
+                        bool.Parse(entries[3]),
+                        bool.Parse(entries[4]),
+                        DateTime.Parse(entries[5]),
+                        float.Parse(entries[6]),
+                        int.Parse(entries[7])
+                    ));
+                }
+            }
+        }
+    }
 }
-
-float getCalories()    //validate input data here!!!
-{
-    UtilsText.LogHealthData(3);
-    float caloriesConsumed = float.Parse(Console.ReadLine());
-    return caloriesConsumed;
-}
-/*---------------------------------------------------------------------------------------------------------*/
 
 
 
 //---------------------------------------------Path & .txt Functions---------------------------------------------
-void inputNewHealthData()
+void createATask()
 {
-    UtilsText.LogHealthData(1);
+    UtilsText.CreateATaskOrProject("tname");
+    string taskName = Console.ReadLine();
+    UtilsText.CreateATaskOrProject("timportant");
+    bool isImportant = Console.ReadLine().ToLower() == "y";
+    UtilsText.CreateATaskOrProject("turgent");
+    bool isUrgent = Console.ReadLine().ToLower() == "y";
+    UtilsText.CreateATaskOrProject("tdue");
+    DateTime dueDate = DateTime.Parse(Console.ReadLine());
+    UtilsText.CreateATaskOrProject("thours");
+    float estimatedHours = float.Parse(Console.ReadLine());
+    UtilsText.CreateATaskOrProject("tpartproject");
+    bool partOfProject = Console.ReadLine().ToLower() == "y";
+    int projectId = -1;
+    if (partOfProject)
+    {
+        UtilsText.CreateATaskOrProject("tprojectname");
+        string projectname = Console.ReadLine();
+        foreach (UtilsProject project in projects)
+        {
+            if (projectname == project.GetProjectName())
+            {
+                projectId = project.GetProjectId();
+            }
+        }
+    }
 
-    float currentWeight = getWeight();
-    float caloriesConsumed = getCalories();
-
-    submitHealthData(UtilsDate.GetDate(), currentWeight, caloriesConsumed);     //store data to file healthlogs.txt
- 
-    UtilsText.LogHealthData(4);
+    tasks.Add(new UtilsTask(tasks.Count + 1, taskName, isImportant, isUrgent, dueDate, estimatedHours, projectId));
+    saveChanges();
     terminalMenu();
 }
 
-void submitHealthData(string date, float weight, float calories)
+void createAProject()
 {
-    string path = GetProjectHealthLogPath();
-    using (StreamWriter sw = File.AppendText(path))
+    UtilsText.CreateATaskOrProject("pname");
+    string name = Console.ReadLine();
+    UtilsText.CreateATaskOrProject("pimportant");
+    bool isImportant = Console.ReadLine().ToLower() == "y";
+    UtilsText.CreateATaskOrProject("purgent");
+    bool isUrgent = Console.ReadLine().ToLower() == "y";
+    UtilsText.CreateATaskOrProject("pdue");
+    DateTime dueDate = DateTime.Parse(Console.ReadLine());
+    UtilsText.CreateATaskOrProject("phours");
+    float estimatedHours = float.Parse(Console.ReadLine());
+    
+
+    projects.Add(new UtilsProject(projects.Count + 1, name, isImportant, isUrgent, dueDate, estimatedHours));
+    saveChanges();
+    terminalMenu();
+}
+
+void saveChanges()
+{
+    string path = GetProjectsAndTasksLogPath();
+    using (StreamWriter sw = File.CreateText(path))
     {
-        sw.WriteLine(date + "	     " + weight + "       	" + calories);
+        foreach (UtilsProject project in projects)
+        {
+            sw.WriteLine($"PROJECT|{project.GetProjectId()}|{project.GetProjectName()}|{project.getisImportant()}|{project.getisUrgent()}|{project.getDueDate()}|{project.getEstimatedHours()}");
+        }
+        foreach (UtilsTask task in tasks)
+        {
+            sw.WriteLine($"TASK|{task.GetTaskId()}|{task.GetTaskName()}|{task.getisImportant()}|{task.getisUrgent()}|{task.getDueDate()}|{task.getEstimatedHours()}|{task.getProjectId()}");
+        }
     }
 }
 /*---------------------------------------------------------------------------------------------------------*/
 
 
 
-
+loadData();
 UtilsText.Greetings();
 terminalMenu();
 
