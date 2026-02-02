@@ -1,6 +1,11 @@
-# Build output
-bin/
-obj/
+# .NET build 
+**/bin/
+**/obj/
 
-# VS Code
+# IDE
+.vs/
 .vscode/
+
+
+Thumbs.db
+.DS_Store
