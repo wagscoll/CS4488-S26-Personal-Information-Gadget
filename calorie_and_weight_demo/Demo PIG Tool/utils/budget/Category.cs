@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Demo_PIG_Tool.Utils.Budget;
+namespace Demo_PIG_Tool.BudgetTool;
+
 
 /* Author: Gabriel Ory
  * This class represents a category in a monthly budget.
@@ -8,8 +9,7 @@ using Demo_PIG_Tool.Utils.Budget;
  * The class provides methods to calculate the total money spent and the remaining budget for the category.
  */
 
-namespace Demo_PIG_Tool.Utils.Budget
-{
+
     public class Category
     {
         public string Name { get; }
@@ -41,4 +41,4 @@ namespace Demo_PIG_Tool.Utils.Budget
             return CategoryBudget - MoneySpent();
         }
     }
-}
+

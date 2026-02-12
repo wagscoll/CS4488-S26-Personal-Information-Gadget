@@ -1,13 +1,14 @@
-﻿using Demo_PIG_Tool.Utils.Budget;
+﻿using System;
+using System.Collections.Generic;
+namespace Demo_PIG_Tool.BudgetTool;
 
 /* Author: Gabriel Ory 
  * This class provides a simple demo of the Budget Expenses sub-tool.
  * It allows the user to create budgets, add expenses, and view the total expenses and remaining budget for each category.
  */
 
-namespace Demo_PIG_Tool.utils.budget
-{
-    internal class BudgetDemo
+
+    public class BudgetDemo
     {
         // runs the demo, allowing the user to create budgets, add expenses, and view the total expenses and remaining budget for each category.
         public static void Run()
@@ -154,4 +155,4 @@ namespace Demo_PIG_Tool.utils.budget
             }
         }
     }
-}
+

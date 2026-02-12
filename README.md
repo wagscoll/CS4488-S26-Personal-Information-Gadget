@@ -3,6 +3,7 @@
 
 After pulling the repository, run by inputting:
 ```
-dotnet build
+cd "calorie_and_weight_demo/Demo PIG Tool"
+dotnet build -v:minimal
 dotnet run
 ```

@@ -51,7 +51,7 @@ namespace Demo_PIG_Tool.Utils
               ║   [2] Create a Task                          ║ 
               ║   [3] Create a Project                       ║
               ║   [4] View Next Two Weeks                    ║
-              ║   [5] Return to Main Menu                    ║
+              ║   [5] Return to Tool Directory               ║
               ║                                              ║
               ╠══════════════════════════════════════════════╣ 
               ║  Type  your choice and press ENTER           ║
