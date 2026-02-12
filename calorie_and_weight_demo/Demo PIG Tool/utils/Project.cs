@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Demo_PIG_Tool.Utils;
 namespace Demo_PIG_Tool.Utils
 {
+    //anh - Created a class to represent a project with its attributes and methods to update and retrieve those attributes.
     public class UtilsProject
     {
         private bool isImportant;

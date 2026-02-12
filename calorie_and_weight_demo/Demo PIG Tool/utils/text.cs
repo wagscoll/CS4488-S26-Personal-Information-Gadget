@@ -42,7 +42,7 @@ namespace Demo_PIG_Tool.Utils
             {
                 //symbols from: https://stackoverflow.com/questions/71912239/c-sharp-console-is-outputting-box-characters-as
 
-
+                // ANH - Changed menu options to match the current functionality of the tool, and added a new option to view and edit existing tasks and projects.
                 string menuPrompt =
                 @"
               ╔════════════════════ MENU ════════════════════╗
@@ -75,7 +75,9 @@ namespace Demo_PIG_Tool.Utils
                     Console.SetCursorPosition(startX, startY + i);
                     Console.Write(lines[i]);
                 }
-            }else if (type == "viewandedit")
+                //Added the view and edit option to the main menu, but it will not be visible until the user selects it from the main menu. This is because the view and edit menu is only shown when the user selects that option from the main menu, and it is not shown by default when the user first opens the tool.
+            }
+            else if (type == "viewandedit")
             {
                 //symbols from: https://stackoverflow.com/questions/71912239/c-sharp-console-is-outputting-box-characters-as
 
