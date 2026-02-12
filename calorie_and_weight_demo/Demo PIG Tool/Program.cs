@@ -65,13 +65,21 @@ void terminalMenu(string type)
                 createAProject();
                 terminalMenu("main");
                 break;
+            case 4:
+                UtilsText.ClearScreen();
+                TwoWeeks.printNDaysFromToday(tasks, projects, 14);
+                Console.WriteLine("\nPress any key to return...");
+                Console.ReadKey();
+                terminalMenu("main");
+                break;
             default:
                 UtilsText.ClearScreen();
                 UtilsText.Greetings();
                 terminalMenu("main");
                 break;
         }
-    }else if(type == "viewandedit")
+    }
+    else if (type == "viewandedit")
     {
         UtilsText.ShowMenu(type);
         int choice;
@@ -95,7 +103,7 @@ void terminalMenu(string type)
                 break;
             default:
                 UtilsText.ClearScreen();
-                editProjectOrTask(choice , "none");
+                editProjectOrTask(choice, "none");
                 break;
         }
     }
@@ -138,7 +146,7 @@ void loadData()
     string path = GetProjectsAndTasksLogPath();
     if (File.Exists(path))
     {
-        using(StreamReader sr = File.OpenText(path))
+        using (StreamReader sr = File.OpenText(path))
         {
             string s = "";
             while ((s = sr.ReadLine()) != null)
@@ -267,24 +275,25 @@ void editProjectOrTask(int id, string taskOrProj)
             }
         }
     }
-    if(taskOrProj == "none")
+    if (taskOrProj == "none")
     {
-        if(taskId != -1)
+        if (taskId != -1)
         {
             taskOrProj = "task";
-        }else if(projectId != -1)
+        }
+        else if (projectId != -1)
         {
             taskOrProj = "proj";
         }
     }
 
-    if(taskOrProj == "proj")
+    if (taskOrProj == "proj")
     {
         projectId = id;
         UtilsProject projectToEdit = null;
         foreach (UtilsProject project in projects)
         {
-            if(projectId == project.GetProjectId())
+            if (projectId == project.GetProjectId())
             {
                 projectToEdit = project;
                 break;
@@ -346,7 +355,7 @@ void editProjectOrTask(int id, string taskOrProj)
                         markedForDeletion.Add(task);
                     }
                 }
-                for(int i = 0; i < markedForDeletion.Count; i++)
+                for (int i = 0; i < markedForDeletion.Count; i++)
                 {
                     tasks.Remove(markedForDeletion.ElementAt(i));
                 }
@@ -369,7 +378,8 @@ void editProjectOrTask(int id, string taskOrProj)
         {
             displayProjectsAndTasks();
         }
-    }else if (taskOrProj == "task")
+    }
+    else if (taskOrProj == "task")
     {
         taskId = id;
         UtilsTask taskToEdit = null;
@@ -382,9 +392,9 @@ void editProjectOrTask(int id, string taskOrProj)
             }
         }
         string projectName = "this task is not a part of a project";
-        foreach(UtilsProject project in projects)
+        foreach (UtilsProject project in projects)
         {
-            if(project.GetProjectId() == taskToEdit.getProjectId())
+            if (project.GetProjectId() == taskToEdit.getProjectId())
             {
                 projectName = project.GetProjectName();
                 break;
@@ -463,7 +473,7 @@ void editProjectOrTask(int id, string taskOrProj)
 int freshId(string type)
 {
     int id = 1;
-    if(type == "project")
+    if (type == "project")
     {
         bool freshId = false;
         while (!freshId)
@@ -525,7 +535,7 @@ void createAProject()
     DateTime dueDate = DateTime.Parse(Console.ReadLine());
     UtilsText.CreateATaskOrProject("phours");
     float estimatedHours = float.Parse(Console.ReadLine());
-    
+
 
     projects.Add(new UtilsProject(freshId("project"), name, isImportant, isUrgent, dueDate, estimatedHours));
     saveChanges();
@@ -556,4 +566,3 @@ UtilsText.Greetings();
 terminalMenu("main");
 
 
-    
