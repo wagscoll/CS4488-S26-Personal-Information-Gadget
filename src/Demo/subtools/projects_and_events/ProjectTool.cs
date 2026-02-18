@@ -129,8 +129,8 @@ public static class ProjectTool
         UtilsText.ClearScreen();
         Console.WriteLine("\t\t --- Projects and Tasks ---\n");
 
-        string projectsAndTasksLogs = getProjectsAndTasksLogs();    // populate healthLogs list
-        Console.WriteLine(projectsAndTasksLogs);          // display healthLogs data
+        string projectsAndTasksLogs = getProjectsAndTasksLogs();    
+        Console.WriteLine(projectsAndTasksLogs);       
 
         terminalMenu("viewandedit");
     }
@@ -140,7 +140,7 @@ public static class ProjectTool
 
     string GetProjectsAndTasksLogPath()
     {
-        return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs\\projectsAndTasksLogs.txt"));
+        return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs", "projectsAndTasksLogs.txt"));
     }
 
     string getProjectsAndTasksLogs()

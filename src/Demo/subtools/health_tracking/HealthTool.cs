@@ -17,25 +17,28 @@ namespace Demo_PIG_Tool.HealthTool
 
         }
     
-    
-        /* Author: Gabriel Ory*/
-        //BudgetDemo budgetDemo = new BudgetDemo();
-        //BudgetDemo.Run();
-
         /*  1/28/26 - Collin
 
-                Work Flow:
-                1. greetings()
-                    2. terminalMenu()
-                        3. Options:
-                            A. displayHealthLogs()
-                                i. getHealthLogs() --> reads from healthlogs.txt and populates healthLogs list
-                            B. inputNewHealthData()
-                                i. collect data via:
-                                    a. logDate()
-                                    b. logWeight()
-                                    c. logCalories()
-                                ii. submitHealthData() --> appends new data to healthlogs.txt
+        Work Flow:
+            1. Run()
+            2. Program.Run()
+            3. Greetings()
+            4. terminalMenu()
+            5. Options:
+                A. displayHealthLogs()
+                    i. GetProjectHealthLogPath() -> resolves /logs/healthlogs.txt
+                    ii. getHealthLogs() -> reads entire healthlogs.txt (or prints “not found”)
+                    iii. print logs -> return to terminalMenu()
+                B. inputNewHealthData()
+                    i. collect data via:
+                        a. UtilsDate.GetDate()
+                        b. getWeight() -> prompt + validate (repeat until valid)
+                        c. getCalories() -> prompt + validate (repeat until valid)
+                            ii. submitHealthData() -> appends one line to healthlogs.txt (format: date | weight | calories)
+                            iii. confirmation -> return to terminalMenu()
+                C. FeatureComingSoon() -> return to terminalMenu()
+                D. Greetings() -> return to terminalMenu()
+                E. SubToolManager.Run() (exit health tool)
 
         */
 
@@ -64,7 +67,7 @@ namespace Demo_PIG_Tool.HealthTool
                         break;
                     case 3:
                         HealthText.ClearScreen();
-                        HealthText.FeatureComingSoon();
+                        HealthText.FeatureComingSoon(); //////////////////////////////////////////////////// do this
                         terminalMenu();
                         break;
                     case 4:
@@ -96,10 +99,12 @@ namespace Demo_PIG_Tool.HealthTool
             /*-----------------------------------------------------------------------------------------------------------*/
 
 
-
+            /*                          ".."                    ".."             ".."         ".."                                             
+            current file HealthTool.cs ------> Health_tracking ------> subtools ------> Demo ------> src --> logs --> healthlogs.txt
+            */
             string GetProjectHealthLogPath()
             {
-                return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "healthlogs.txt"));
+                return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs", "healthlogs.txt"));
             }
 
             string getHealthLogs()
@@ -118,21 +123,49 @@ namespace Demo_PIG_Tool.HealthTool
 
 
             //---------------------------------------------Logging Functions---------------------------------------------
-            float getWeight()    //validate input data here!!!
+            float getWeight() 
             {
                 HealthText.LogHealthData(2);
                 float currentWeight = float.Parse(Console.ReadLine());
+
+                if(!inputValidation(currentWeight))
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number for weight.");
+                    return getWeight();
+                }
                 return currentWeight;
             }
 
-            float getCalories()    //validate input data here!!!
+            float getCalories()   
             {
                 HealthText.LogHealthData(3);
                 float caloriesConsumed = float.Parse(Console.ReadLine());
+
+                if(!inputValidation(caloriesConsumed))
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number for calories consumed.");
+                    return getCalories();
+                }
+                
                 return caloriesConsumed;
             }
             /*---------------------------------------------------------------------------------------------------------*/
 
+            bool inputValidation(float value)
+            {
+
+                if(value < 0 || value > 100000)
+                {
+                    return false;
+                }
+
+                else if(float.IsNaN(value))
+                {
+                    return false;
+                }
+
+                return true;
+            }
 
 
             //---------------------------------------------Path & .txt Functions---------------------------------------------
@@ -149,12 +182,16 @@ namespace Demo_PIG_Tool.HealthTool
                 terminalMenu();
             }
 
+
+            //This function adds new health data to the healthlogs.txt file in the format: date | weight | calories
+            //For data parsing, we can split the string by " | " to retrieve individual data points
             void submitHealthData(string date, float weight, float calories)        //update this formatting
             {
                 string path = GetProjectHealthLogPath();
                 using (StreamWriter sw = File.AppendText(path))
                 {
-                    sw.WriteLine(date + "	     " + weight + "       	" + calories);
+                    string healthData = string.Join(" | ", date, weight, calories);
+                    sw.WriteLine(healthData);
                 }
             }
             /*---------------------------------------------------------------------------------------------------------*/
