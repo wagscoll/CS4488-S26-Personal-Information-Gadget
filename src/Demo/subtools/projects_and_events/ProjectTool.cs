@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Demo_PIG_Tool.Utils;
 using Demo_PIG_Tool.Manager;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Demo_PIG_Tool.ProjectTool;
 
@@ -87,6 +90,11 @@ public static class ProjectTool
                     UtilsText.ClearScreen();
                     SubToolManager.Run();
                     break;
+                case 6:
+                    exportProjectsToDocx();
+                    UtilsText.ClearScreen();
+                    SubToolManager.Run();
+                    break;
                 default:
                     UtilsText.ClearScreen();
                     UtilsText.Greetings();
@@ -124,7 +132,147 @@ public static class ProjectTool
         }
     }
 
-    void displayProjectsAndTasks()
+        void exportProjectsToDocx()
+        {
+            deleteCurrentDocx();
+
+            string docPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs", "projectAndTasks.docx"));
+            using var doc = WordprocessingDocument.Create(docPath, WordprocessingDocumentType.Document);
+
+            var mainPart = doc.AddMainDocumentPart();
+            var body = new Body();
+            mainPart.Document = new Document(body);
+
+            // ── Numbering (multi-level list) ──────────────────────────────────────────
+            var numberingPart = mainPart.AddNewPart<NumberingDefinitionsPart>();
+            numberingPart.Numbering = new Numbering();
+
+            // Abstract numbering: level 0 = "1)", level 1 = "a)", level 2 = "i)"
+            var abstractNum = new AbstractNum(
+                new MultiLevelType() { Val = MultiLevelValues.HybridMultilevel },
+                BuildLevel(0, NumberFormatValues.Decimal, "%1)", 720, 360),
+                BuildLevel(1, NumberFormatValues.LowerLetter, "%2)", 1440, 360),
+                BuildLevel(2, NumberFormatValues.LowerRoman, "%3)", 2160, 360)
+            )
+            { AbstractNumberId = 1 };
+            numberingPart.Numbering.Append(abstractNum);
+
+            var numInstance = new NumberingInstance(
+                new AbstractNumId() { Val = 1 }
+            )
+            { NumberID = 1 };
+            numberingPart.Numbering.Append(numInstance);
+
+            // ── Helpers ───────────────────────────────────────────────────────────────
+
+            // Bold centered title
+            Paragraph MakeTitle(string text)
+            {
+                var rpr = new RunProperties(new Bold(), new FontSize() { Val = "28" });
+                var run = new Run(rpr, new Text(text));
+                var ppr = new ParagraphProperties(new Justification() { Val = JustificationValues.Center });
+                return new Paragraph(ppr, run);
+            }
+
+            // Bold section header (e.g. "TASKS", "BUDGET/Expenses")
+            Paragraph MakeHeader(string text)
+            {
+                var rpr = new RunProperties(new Bold(), new Underline() { Val = UnderlineValues.Single });
+                var run = new Run(rpr, new Text(text));
+                var ppr = new ParagraphProperties(new SpacingBetweenLines() { Before = "200" });
+                return new Paragraph(ppr, run);
+            }
+
+            // List item at a given level (0=numbered, 1=lettered, 2=roman)
+            Paragraph MakeListItem(string text, int level, bool bold = false)
+            {
+                var rpr = new RunProperties();
+                if (bold) rpr.Append(new Bold());
+                var run = new Run(rpr, new Text(text) { Space = SpaceProcessingModeValues.Preserve });
+
+                var numPr = new NumberingProperties(
+                    new NumberingLevelReference() { Val = level },
+                    new NumberingId() { Val = 1 }
+                );
+                var ppr = new ParagraphProperties(numPr);
+                return new Paragraph(ppr, run);
+            }
+
+            // Plain paragraph (no list)
+            Paragraph MakePlain(string text, bool bold = false)
+            {
+                var rpr = new RunProperties();
+                if (bold) rpr.Append(new Bold());
+                var run = new Run(rpr, new Text(text) { Space = SpaceProcessingModeValues.Preserve });
+                return new Paragraph(run);
+            }
+
+            // ── Document content ──────────────────────────────────────────────────────
+
+            body.Append(MakeTitle("Project/Task Budget Time Management Tool"));
+            body.Append(MakePlain("Emergency contact phone#"));
+            body.Append(MakePlain("")); // spacer
+
+            // TASKS section — projects become level-0 items, tasks become level-1
+            body.Append(MakeHeader("PROJECTS"));
+
+            foreach (UtilsProject project in projects)
+            {
+                // Top-level numbered item: project name + metadata
+                string projectLine = $"{project.GetProjectName()} " +
+                    $"| Important: {project.getisImportant()} | Urgent: {project.getisUrgent()} " +
+                    $"| Due: {project.getDueDate()} | Est Hrs: {project.getEstimatedHours()}";
+                body.Append(MakeListItem(projectLine, level: 0, bold: true));
+
+                // Sub-items: tasks that belong to this project
+                foreach (UtilsTask task in tasks.Where(t => t.getProjectId() == project.GetProjectId()))
+                {
+                    string taskLine = $"{task.GetTaskName()} " +
+                        $"| Important: {task.getisImportant()} | Urgent: {task.getisUrgent()} " +
+                        $"| Due: {task.getDueDate()} | Est Hrs: {task.getEstimatedHours()}";
+                    body.Append(MakeListItem(taskLine, level: 1));
+                }
+            }
+
+            // Tasks with no project (unassigned)
+            var unassigned = tasks.Where(t => !projects.Any(p => p.GetProjectId() == t.getProjectId())).ToList();
+            if (unassigned.Any())
+            {
+                body.Append(MakePlain(""));
+                body.Append(MakeHeader("UNASSIGNED TASKS"));
+                foreach (UtilsTask task in unassigned)
+                {
+                    body.Append(MakeListItem($"{task.GetTaskName()} | Due: {task.getDueDate()} | Est Hrs: {task.getEstimatedHours()}", level: 0));
+                }
+            }
+
+            mainPart.Document.Save();
+            Console.WriteLine($"Exported to {docPath}");
+        }
+
+        // Builds one level of the abstract numbering definition
+        static Level BuildLevel(int levelIndex, NumberFormatValues format, string levelText, int indent, int hanging)
+        {
+            return new Level(
+                new StartNumberingValue() { Val = 1 },
+                new NumberingFormat() { Val = format },
+                new LevelText() { Val = levelText },
+                new LevelJustification() { Val = LevelJustificationValues.Left },
+                new PreviousParagraphProperties(
+                    new Indentation() { Left = indent.ToString(), Hanging = hanging.ToString() }
+                )
+            )
+            { LevelIndex = levelIndex };
+        }
+
+        void deleteCurrentDocx()
+        {
+            string path = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs", "projectAndTasks.docx"));
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+
+        void displayProjectsAndTasks()
     {
         UtilsText.ClearScreen();
         Console.WriteLine("\t\t --- Projects and Tasks ---\n");
