@@ -52,6 +52,7 @@ namespace Demo_PIG_Tool.Utils
               ║   [3] Create a Project                       ║
               ║   [4] View Next Two Weeks                    ║
               ║   [5] Return to Tool Directory               ║
+              ║   [6] Export to Docx                         ║
               ║                                              ║
               ╠══════════════════════════════════════════════╣ 
               ║  Type  your choice and press ENTER           ║
