@@ -16,7 +16,7 @@ namespace Demo_PIG_Tool
                         //up to date with the latest information
                         //NOT YET IMPLEMENTED IN SUBTOOLS
 
-            //SubToolManager.Run();
+            SubToolManager.Run();
         }
     }
 }
