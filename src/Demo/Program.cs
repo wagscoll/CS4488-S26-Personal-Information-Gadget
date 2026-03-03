@@ -1,6 +1,5 @@
 using Demo_PIG_Tool.Manager;
 using Utils.Docx;
-using Utils.Doxc;
 
 namespace Demo_PIG_Tool
 {
@@ -16,7 +15,7 @@ namespace Demo_PIG_Tool
                         //up to date with the latest information
                         //NOT YET IMPLEMENTED IN SUBTOOLS
 
-            //SubToolManager.Run();
+            SubToolManager.Run();
         }
     }
 }
