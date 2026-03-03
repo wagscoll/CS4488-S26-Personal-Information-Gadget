@@ -18,6 +18,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             RefreshListView();
             listView.Visible = true;
             editPanel.Visible = false;
+            schedulePanel.Visible = false;
             viewEditButton.BackColor = Color.FromArgb(0, 20, 215);
             createTaskButton.BackColor = Color.FromArgb(0, 120, 215);
             createProjectButton.BackColor = Color.FromArgb(0, 120, 215);
@@ -97,6 +98,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             editPanel.Controls.Clear();
             editPanel.Visible = true;
             listView.Visible = false;
+            schedulePanel.Visible = false;
 
             int yPos = 20;
 
@@ -174,6 +176,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 RefreshListView();
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(saveButton);
 
@@ -182,6 +185,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             {
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(cancelButton);
         }
@@ -190,6 +194,7 @@ namespace ProjectAndTaskManagerFormAppDemo
         {
             editPanel.Controls.Clear();
             editPanel.Visible = true;
+            schedulePanel.Visible = false;
             listView.Visible = false;
 
             int yPos = 20;
@@ -249,6 +254,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 RefreshListView();
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(saveButton);
 
@@ -257,6 +263,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             {
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(cancelButton);
         }
@@ -269,6 +276,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             editPanel.Controls.Clear();
             editPanel.Visible = true;
             listView.Visible = false;
+            schedulePanel.Visible = false;
 
             int yPos = 20;
 
@@ -344,6 +352,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 RefreshListView();
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(saveButton);
 
@@ -359,6 +368,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                     RefreshListView();
                     listView.Visible = true;
                     editPanel.Visible = false;
+                    schedulePanel.Visible = false;
                 }
             };
             editPanel.Controls.Add(deleteButton);
@@ -368,6 +378,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             {
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(cancelButton);
         }
@@ -380,6 +391,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             editPanel.Controls.Clear();
             editPanel.Visible = true;
             listView.Visible = false;
+            schedulePanel.Visible = false;
 
             int yPos = 20;
 
@@ -431,6 +443,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 RefreshListView();
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(saveButton);
 
@@ -438,7 +451,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             deleteButton.Click += (s, e) =>
             {
                 var relatedTasks = tasks.Where(t => t.getProjectId() == projectId).ToList();
-                string message = relatedTasks.Count > 0 
+                string message = relatedTasks.Count > 0
                     ? $"This project has {relatedTasks.Count} related task(s). Delete all related tasks as well?"
                     : "Are you sure you want to delete this project?";
 
@@ -456,6 +469,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                     RefreshListView();
                     listView.Visible = true;
                     editPanel.Visible = false;
+                    schedulePanel.Visible = false;
                 }
                 else if (result == DialogResult.No && relatedTasks.Count > 0)
                 {
@@ -469,15 +483,17 @@ namespace ProjectAndTaskManagerFormAppDemo
                     RefreshListView();
                     listView.Visible = true;
                     editPanel.Visible = false;
+                    schedulePanel.Visible = false;
                 }
             };
             editPanel.Controls.Add(deleteButton);
 
-            Button cancelButton = new Button { Text = "Cancel", Location = new Point(420, yPos), Width = 100, Height = 35,BackColor = Color.Gray, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            Button cancelButton = new Button { Text = "Cancel", Location = new Point(420, yPos), Width = 100, Height = 35, BackColor = Color.Gray, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
             cancelButton.Click += (s, e) =>
             {
                 listView.Visible = true;
                 editPanel.Visible = false;
+                schedulePanel.Visible = false;
             };
             editPanel.Controls.Add(cancelButton);
         }
@@ -594,6 +610,159 @@ namespace ProjectAndTaskManagerFormAppDemo
                     sw.WriteLine($"TASK|{task.GetTaskId()}|{task.GetTaskName()}|{task.getisImportant()}|{task.getisUrgent()}|{task.getDueDate()}|{task.getEstimatedHours()}|{task.getProjectId()}");
                 }
             }
+        }
+
+        private void mainPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void twoWeeksButton_Click(object sender, EventArgs e)
+        {
+            // Build and display the schedule text
+            scheduleTextBox.Text = BuildScheduleText(14);
+
+            // toggle what's visible
+            schedulePanel.Visible = true;
+            listView.Visible = false;
+            editPanel.Visible = false;
+
+            editTipLabel.Visible = false;
+        }
+
+        // Displays tasks and projects due in the next n days (default 14)
+        // In the WinForms version, return the formatted text so it can go in a textbox.
+        private string BuildScheduleText(int n = 14)
+        {
+            // Build output instead of Console.WriteLine
+            var sb = new System.Text.StringBuilder();  
+
+            // Get today's date and calculate the end date
+            // We add n+1 days to include tasks and projects due on the nth day
+            DateTime today = DateTime.Today;
+            DateTime endDate = today.AddDays(n + 1);
+
+            // Filter tasks and projects that are due between today and the end date    
+            // We use >= today to include tasks/projects due today, 
+            // and < endDate to exclude those due on the day after the nth day
+            var tasksDueInTwoWeeks = tasks
+                .Where(task => task.getDueDate() >= today && task.getDueDate() < endDate)
+                .ToList();
+
+            var projectsDueInTwoWeeks = projects
+                .Where(project => project.getDueDate() >= today && project.getDueDate() < endDate)
+                .ToList();
+
+            // Group projects by their due date
+            var groupedProjects = projectsDueInTwoWeeks
+                .GroupBy(project => project.getDueDate().Date)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            sb.AppendLine($"Tasks due in the next {n} days:\n");
+
+            // Group tasks by their due date aswell
+            var groupedTasksDict = tasksDueInTwoWeeks
+                .GroupBy(task => task.getDueDate().Date)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Get a sorted list of all unique due dates from both tasks and projects
+            // We use Union to combine the keys from both dictionaries, and OrderBy to sort them
+            var allDates = groupedTasksDict.Keys
+                .Union(groupedProjects.Keys)
+                .OrderBy(d => d)
+                .ToList();
+
+            //no dates
+            if (allDates.Count == 0)
+            {
+                sb.AppendLine("(No tasks or projects due in this range.)\n");
+                return sb.ToString();
+            }
+
+            int dayCounter = 1;
+            // Iterate through each date and display the tasks and projects due on that date
+            foreach (var date in allDates)
+            {
+                sb.AppendLine($"{dayCounter}) {date:ddd MMM dd, yyyy}");
+                // First display tasks due on that date
+                if (groupedTasksDict.TryGetValue(date, out var tasksOnThatDay))
+                {
+                    //Sort tasks by due time, then by urgency, importance, and finally alphabetically by name
+                    var sortedTasks = tasksOnThatDay
+                        .OrderBy(t => t.getDueDate().TimeOfDay)
+                        .ThenByDescending(t => t.getisUrgent())
+                        .ThenByDescending(t => t.getisImportant())
+                        .ThenBy(t => t.GetTaskName())
+                        .ToList();
+
+                    // add tasks with a letter label (a, b, c, etc.)       
+                    char letter = 'a';
+                    // For each task, we display the due time, name, project (if any), and tags (Urgent/Important)
+                    foreach (var sortedTask in sortedTasks)
+                    {
+                        string time = sortedTask.getDueDate().ToString("hh:mm tt");
+                        string tags = BuildTags(sortedTask);
+                        string proj = ProjectLabel(sortedTask);
+
+                        // add the task with its letter label, due time, name, project label, and tags
+
+                        sb.AppendLine($"\t{letter}) {time} {sortedTask.GetTaskName()}{proj}{tags}");
+                        letter++;
+                    }
+                }
+
+                // Then display projects due on that date, if any (we check the groupedProjects dictionary for easy lookup)
+                if (groupedProjects.TryGetValue(date, out var projectsOnThatDay))
+                {
+                    sb.AppendLine("\t-- Projects due --");
+
+                    foreach (var project in projectsOnThatDay
+                        // We sort projects by due time, then by urgency, importance, and finally alphabetically by name
+                        .OrderBy(p => p.getDueDate().TimeOfDay)
+                        .ThenByDescending(p => p.getisUrgent())
+                        .ThenByDescending(p => p.getisImportant())
+                        .ThenBy(p => p.GetProjectName()))
+                    {
+                        string ptime = project.getDueDate().ToString("hh:mm tt");
+                        string ptags = BuildTags(project);
+                        sb.AppendLine($"\t   • {ptime} {project.GetProjectName()}{ptags}");
+                    }
+                }
+
+                sb.AppendLine();
+                dayCounter++;
+            }
+
+            return sb.ToString();
+        }
+
+
+        // Helper method to build the tags string for a task based on its urgency and importance
+        private string BuildTags(UtilsTask task)
+        {
+            List<string> tags = new();
+            if (task.getisUrgent()) tags.Add("Urgent");
+            if (task.getisImportant()) tags.Add("Important");
+            return tags.Count > 0 ? $" [{string.Join(", ", tags)}]" : "";
+        }
+
+        // Overloaded helper method to build the tags string for a project based on its urgency and importance
+        private string BuildTags(UtilsProject project)
+        {
+            List<string> tags = new();
+            if (project.getisUrgent()) tags.Add("Urgent");
+            if (project.getisImportant()) tags.Add("Important");
+            return tags.Count > 0 ? $" [{string.Join(", ", tags)}]" : "";
+        }
+
+        // Helper method to get the project label for a task, if it belongs to a project
+        private string ProjectLabel(UtilsTask task)
+        {
+            int pid = task.getProjectId();
+            if (pid == -1) return "";
+
+            var p = projects.FirstOrDefault(x => x.GetProjectId() == pid);
+            return p == null ? " [Project: Unknown]" : $" [Project: {p.GetProjectName()}]";
         }
     }
 }

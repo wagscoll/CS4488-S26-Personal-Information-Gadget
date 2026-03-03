@@ -47,16 +47,23 @@ namespace ProjectAndTaskManagerFormAppDemo
             hoursColumn = new ColumnHeader();
             projectIdColumn = new ColumnHeader();
             editPanel = new Panel();
+            schedulePanel = new Panel();
+            scheduleTextBox = new TextBox();
+            twoWeeksButton = new Button();
+            mainPanel.SuspendLayout();
+            schedulePanel.SuspendLayout();
             SuspendLayout();
             // 
             // mainPanel
             // 
             mainPanel.BackColor = Color.FromArgb(240, 240, 240);
+            mainPanel.Controls.Add(twoWeeksButton);
             mainPanel.Dock = DockStyle.Top;
             mainPanel.Location = new Point(0, 0);
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new Size(1000, 120);
             mainPanel.TabIndex = 0;
+            mainPanel.Paint += mainPanel_Paint;
             // 
             // titleLabel
             // 
@@ -65,7 +72,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             titleLabel.ForeColor = Color.FromArgb(0, 120, 215);
             titleLabel.Location = new Point(20, 20);
             titleLabel.Name = "titleLabel";
-            titleLabel.Size = new Size(424, 32);
+            titleLabel.Size = new Size(415, 32);
             titleLabel.TabIndex = 0;
             titleLabel.Text = "Project and Task Management Tool";
             // 
@@ -118,7 +125,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             editTipLabel.ForeColor = Color.FromArgb(15, 15, 15);
             editTipLabel.Location = new Point(20, 100);
             editTipLabel.Name = "editTipLabel";
-            editTipLabel.Size = new Size(424, 32);
+            editTipLabel.Size = new Size(196, 13);
             editTipLabel.TabIndex = 0;
             editTipLabel.Text = "Double click an item below to edit it.";
             // 
@@ -127,7 +134,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             listPanel.Dock = DockStyle.Fill;
             listPanel.Location = new Point(0, 120);
             listPanel.Name = "listPanel";
-            listPanel.Size = new Size(1000, 480);
+            listPanel.Size = new Size(1000, 583);
             listPanel.TabIndex = 1;
             // 
             // listView
@@ -136,9 +143,9 @@ namespace ProjectAndTaskManagerFormAppDemo
             listView.Dock = DockStyle.Fill;
             listView.FullRowSelect = true;
             listView.GridLines = true;
-            listView.Location = new Point(0, 0);
+            listView.Location = new Point(0, 120);
             listView.Name = "listView";
-            listView.Size = new Size(1000, 480);
+            listView.Size = new Size(1000, 583);
             listView.TabIndex = 0;
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = View.Details;
@@ -190,15 +197,52 @@ namespace ProjectAndTaskManagerFormAppDemo
             editPanel.Dock = DockStyle.Fill;
             editPanel.Location = new Point(0, 120);
             editPanel.Name = "editPanel";
-            editPanel.Size = new Size(1000, 480);
+            editPanel.Size = new Size(1000, 583);
             editPanel.TabIndex = 2;
             editPanel.Visible = false;
+            // 
+            // schedulePanel
+            // 
+            schedulePanel.Controls.Add(scheduleTextBox);
+            schedulePanel.Dock = DockStyle.Fill;
+            schedulePanel.Location = new Point(0, 120);
+            schedulePanel.Name = "schedulePanel";
+            schedulePanel.Size = new Size(1000, 583);
+            schedulePanel.TabIndex = 0;
+            schedulePanel.Visible = false;
+            // 
+            // scheduleTextBox
+            // 
+            scheduleTextBox.Dock = DockStyle.Fill;
+            scheduleTextBox.Location = new Point(0, 0);
+            scheduleTextBox.Multiline = true;
+            scheduleTextBox.Name = "scheduleTextBox";
+            scheduleTextBox.ReadOnly = true;
+            scheduleTextBox.ScrollBars = ScrollBars.Vertical;
+            scheduleTextBox.Size = new Size(1000, 583);
+            scheduleTextBox.TabIndex = 0;
+            scheduleTextBox.WordWrap = false;
+            // 
+            // twoWeeksButton
+            // 
+            twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
+            twoWeeksButton.FlatStyle = FlatStyle.Flat;
+            twoWeeksButton.Font = new Font("Segoe UI", 10F);
+            twoWeeksButton.ForeColor = Color.White;
+            twoWeeksButton.Location = new Point(456, 60);
+            twoWeeksButton.Name = "twoWeeksButton";
+            twoWeeksButton.Size = new Size(150, 35);
+            twoWeeksButton.TabIndex = 4;
+            twoWeeksButton.Text = "Two Week Schedule";
+            twoWeeksButton.UseVisualStyleBackColor = false;
+            twoWeeksButton.Click += twoWeeksButton_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1000, 600);
+            ClientSize = new Size(1000, 703);
+            Controls.Add(schedulePanel);
             Controls.Add(editPanel);
             Controls.Add(listView);
             Controls.Add(listPanel);
@@ -210,6 +254,9 @@ namespace ProjectAndTaskManagerFormAppDemo
             Controls.Add(mainPanel);
             Name = "Form1";
             Text = "Project and Task Manager";
+            mainPanel.ResumeLayout(false);
+            schedulePanel.ResumeLayout(false);
+            schedulePanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -233,5 +280,8 @@ namespace ProjectAndTaskManagerFormAppDemo
         private ColumnHeader hoursColumn;
         private ColumnHeader projectIdColumn;
         private Panel editPanel;
+        private Panel schedulePanel;
+        private TextBox scheduleTextBox;
+        private Button twoWeeksButton;
     }
 }
