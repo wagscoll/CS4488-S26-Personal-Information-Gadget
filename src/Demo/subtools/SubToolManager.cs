@@ -4,6 +4,7 @@ using Health = Demo_PIG_Tool.HealthTool.HealthTool;
 using Budget = Demo_PIG_Tool.BudgetTool.BudgetDemo;
 using Project = Demo_PIG_Tool.ProjectTool.ProjectTool;
 using Demo_PIG_Tool.BudgetTool;
+using Utils.Docx;
 
 
 namespace Demo_PIG_Tool.Manager
@@ -149,6 +150,62 @@ namespace Demo_PIG_Tool.Manager
             Console.WriteLine("\n--- Budget Logs ---");
             PrintFileContents(budgetPath);
             */
+        }
+
+        private static string GetHealthLogs()
+        {
+            string basePath = Path.GetFullPath(
+                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
+
+            string healthPath = Path.Combine(basePath, "healthlogs.txt");
+
+            return File.Exists(healthPath)
+                ? ("--- Health Logs ---\n" + File.ReadAllText(healthPath))
+                : ("--- Health Logs ---\n(Health log file not found)");
+        }
+
+        private static string GetProjectLogs()
+        {
+            string basePath = Path.GetFullPath(
+                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
+
+            string projectPath = Path.Combine(basePath, "projectsAndTasksLogs.txt");
+
+            return File.Exists(projectPath)
+                ? ("--- Projects and Tasks Logs ---\n" + File.ReadAllText(projectPath))
+                : ("--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)");
+        }
+
+        private static string GetBudgetLogs()
+        {
+            string basePath = Path.GetFullPath(
+                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
+
+            string budgetPath = Path.Combine(basePath, "budgetlogs.txt");
+
+            return File.Exists(budgetPath)
+                ? ("--- Budget Logs ---\n" + File.ReadAllText(budgetPath))
+                : ("--- Budget Logs ---\n(Budget log file not found)");
+        }
+
+
+        public static void UpdateDocx()
+        {
+            string s1 = GetHealthLogs();
+            string s2 = GetProjectLogs();
+            string s3 = GetBudgetLogs();
+
+            string combined = s1 + "\n\n" + s2 + "\n\n" + s3;
+
+            try
+            {
+                Docx.WriteToDocx("Output.docx", combined); // creates/overwrites
+                Console.WriteLine("Wrote Output.docx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing to docx: {ex.Message}");
+            }
         }
 
         private static void PrintFileContents(string path)
