@@ -96,7 +96,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             createTaskButton.FlatStyle = FlatStyle.Flat;
             createTaskButton.Font = new Font("Segoe UI", 10F);
             createTaskButton.ForeColor = Color.White;
-            createTaskButton.Location = new Point(155, 60);
+            createTaskButton.Location = new Point(165, 60);
             createTaskButton.Name = "createTaskButton";
             createTaskButton.Size = new Size(150, 35);
             createTaskButton.TabIndex = 2;
@@ -110,7 +110,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             createProjectButton.FlatStyle = FlatStyle.Flat;
             createProjectButton.Font = new Font("Segoe UI", 10F);
             createProjectButton.ForeColor = Color.White;
-            createProjectButton.Location = new Point(300, 60);
+            createProjectButton.Location = new Point(310, 60);
             createProjectButton.Name = "createProjectButton";
             createProjectButton.Size = new Size(150, 35);
             createProjectButton.TabIndex = 3;
@@ -229,7 +229,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             twoWeeksButton.FlatStyle = FlatStyle.Flat;
             twoWeeksButton.Font = new Font("Segoe UI", 10F);
             twoWeeksButton.ForeColor = Color.White;
-            twoWeeksButton.Location = new Point(456, 60);
+            twoWeeksButton.Location = new Point(458, 60);
             twoWeeksButton.Name = "twoWeeksButton";
             twoWeeksButton.Size = new Size(150, 35);
             twoWeeksButton.TabIndex = 4;

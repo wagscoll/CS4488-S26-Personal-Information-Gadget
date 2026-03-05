@@ -22,6 +22,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             viewEditButton.BackColor = Color.FromArgb(0, 20, 215);
             createTaskButton.BackColor = Color.FromArgb(0, 120, 215);
             createProjectButton.BackColor = Color.FromArgb(0, 120, 215);
+            twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
             editTipLabel.Visible = true;
         }
 
@@ -31,6 +32,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             viewEditButton.BackColor = Color.FromArgb(0, 120, 215);
             createTaskButton.BackColor = Color.FromArgb(0, 20, 215);
             createProjectButton.BackColor = Color.FromArgb(0, 120, 215);
+            twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
             editTipLabel.Visible = false;
         }
 
@@ -40,6 +42,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             viewEditButton.BackColor = Color.FromArgb(0, 120, 215);
             createTaskButton.BackColor = Color.FromArgb(0, 120, 215);
             createProjectButton.BackColor = Color.FromArgb(0, 20, 215);
+            twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
             editTipLabel.Visible = false;
         }
 
@@ -628,6 +631,11 @@ namespace ProjectAndTaskManagerFormAppDemo
             editPanel.Visible = false;
 
             editTipLabel.Visible = false;
+            //Change the button colors to display what tab the user is on -ANH 3/5/26
+            viewEditButton.BackColor = Color.FromArgb(0, 120, 215);
+            createTaskButton.BackColor = Color.FromArgb(0, 120, 215);
+            createProjectButton.BackColor = Color.FromArgb(0, 120, 215);
+            twoWeeksButton.BackColor = Color.FromArgb(0, 20, 215);
         }
 
         // Displays tasks and projects due in the next n days (default 14)
