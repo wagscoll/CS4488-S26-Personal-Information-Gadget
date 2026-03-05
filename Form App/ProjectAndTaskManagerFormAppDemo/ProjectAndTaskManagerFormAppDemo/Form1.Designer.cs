@@ -63,7 +63,6 @@ namespace ProjectAndTaskManagerFormAppDemo
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new Size(1000, 120);
             mainPanel.TabIndex = 0;
-            mainPanel.Paint += mainPanel_Paint;
             // 
             // titleLabel
             // 

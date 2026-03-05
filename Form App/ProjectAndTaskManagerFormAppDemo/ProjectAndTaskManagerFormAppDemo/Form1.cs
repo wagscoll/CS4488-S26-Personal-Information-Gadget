@@ -12,7 +12,8 @@ namespace ProjectAndTaskManagerFormAppDemo
             loadData();
             RefreshListView();
         }
-
+         // anh 3/2 - Refreshes the list view panel and toggles visibility of panels
+         //           and button colors to indicate which tab the user is on when the "View/Edit" button is clicked.
         private void ViewEditButton_Click(object sender, EventArgs e)
         {
             RefreshListView();
@@ -25,7 +26,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
             editTipLabel.Visible = true;
         }
-
+        // anh 3/2 - Displays the form to create a new task and toggles visibility of panels
         private void CreateTaskButton_Click(object sender, EventArgs e)
         {
             ShowCreateTaskForm();
@@ -35,7 +36,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
             editTipLabel.Visible = false;
         }
-
+        // anh 3/2 - Displays the form to create a new project and toggles visibility of panels
         private void CreateProjectButton_Click(object sender, EventArgs e)
         {
             ShowCreateProjectForm();
@@ -45,7 +46,8 @@ namespace ProjectAndTaskManagerFormAppDemo
             twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
             editTipLabel.Visible = false;
         }
-
+        // anh 3/2 - Displays the form to edit a task or project when
+        //           an item in the list view is double-clicked and toggles visibility of panels
         private void ListView_DoubleClick(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count > 0)
@@ -64,7 +66,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 }
             }
         }
-
+        // anh 3/2 - Refreshes the list view with the latest projects and tasks data, and toggles visibility of panels
         private void RefreshListView()
         {
             listView.Items.Clear();
@@ -95,7 +97,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 listView.Items.Add(item);
             }
         }
-
+        // anh 3/2 - Displays the form to create a new task with input fields for task attributes and toggles visibility of panels
         private void ShowCreateTaskForm()
         {
             editPanel.Controls.Clear();
@@ -192,7 +194,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             };
             editPanel.Controls.Add(cancelButton);
         }
-
+        // anh 3/2 - Displays the form to create a new project with input fields for project attributes and toggles visibility of panels
         private void ShowCreateProjectForm()
         {
             editPanel.Controls.Clear();
@@ -270,7 +272,8 @@ namespace ProjectAndTaskManagerFormAppDemo
             };
             editPanel.Controls.Add(cancelButton);
         }
-
+        // anh 3/2 - Displays the form to edit an existing task with pre-filled input
+        //           fields for task attributes and toggles visibility of panels
         private void ShowEditTaskForm(int taskId)
         {
             UtilsTask taskToEdit = tasks.FirstOrDefault(t => t.GetTaskId() == taskId);
@@ -385,7 +388,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             };
             editPanel.Controls.Add(cancelButton);
         }
-
+        // anh 3/2 - Displays the form to edit an existing project with pre-filled input
         private void ShowEditProjectForm(int projectId)
         {
             UtilsProject projectToEdit = projects.FirstOrDefault(p => p.GetProjectId() == projectId);
@@ -500,12 +503,14 @@ namespace ProjectAndTaskManagerFormAppDemo
             };
             editPanel.Controls.Add(cancelButton);
         }
-
+        // anh 3/2 - Helper method to get the file path for storing projects and tasks logs,
+        //           ensuring it's in a consistent location relative to the application's base directory.
         private string GetProjectsAndTasksLogPath()
         {
             return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "projectsAndTasksLogs.txt"));
         }
-
+        // anh 3/2 - Loads projects and tasks data from a log file,
+        //           parsing each line to create corresponding objects and populate the lists.
         private void loadData()
         {
             string path = GetProjectsAndTasksLogPath();
@@ -544,7 +549,7 @@ namespace ProjectAndTaskManagerFormAppDemo
                 }
             }
         }
-
+        // anh 3/2 - Generates a unique ID for a new project or task by checking existing IDs in the respective list,
         private int freshId(string type)
         {
             int id = 1;
@@ -598,7 +603,7 @@ namespace ProjectAndTaskManagerFormAppDemo
             }
             return -1;
         }
-
+        // anh 3/2 - Saves the current state of projects and tasks to a log file
         private void saveChanges()
         {
             string path = GetProjectsAndTasksLogPath();
@@ -613,11 +618,6 @@ namespace ProjectAndTaskManagerFormAppDemo
                     sw.WriteLine($"TASK|{task.GetTaskId()}|{task.GetTaskName()}|{task.getisImportant()}|{task.getisUrgent()}|{task.getDueDate()}|{task.getEstimatedHours()}|{task.getProjectId()}");
                 }
             }
-        }
-
-        private void mainPanel_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void twoWeeksButton_Click(object sender, EventArgs e)
