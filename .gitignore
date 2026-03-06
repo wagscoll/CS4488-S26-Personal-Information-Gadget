@@ -9,3 +9,8 @@
 
 Thumbs.db
 .DS_Store
+.vs/
+src/Demo/Output.docx
+src/logs/*.docx
+src/Demo/~$*.docx
+
