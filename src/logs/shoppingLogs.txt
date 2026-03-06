@@ -1,0 +1,7 @@
+Shopping List: Gabe's List
+Items:
+- Apples (4 @ $1.00 each) from Winco: $4.00
+- Bananas (5 @ $1.00 each) from Winco: $5.00
+- Watermelon (1 @ $10.00 each) from Winco: $10.00
+Total Cost: $19.00
+

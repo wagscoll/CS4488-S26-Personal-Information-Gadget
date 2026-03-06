@@ -1,4 +1,4 @@
-namespace Demo_PIG_Tool.BudgetTool;
+cdnamespace Demo_PIG_Tool.BudgetTool;
 
 /* Author: Gabriel Ory
  * This class represents a shopping list containing multiple grocery items.

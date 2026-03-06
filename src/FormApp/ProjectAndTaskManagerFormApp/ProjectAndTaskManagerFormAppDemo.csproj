@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\Demo\subtools\projects_and_events\*.cs" />
+		<Compile Include="..\..\Demo\subtools\budget\*.cs" />
+		<Compile Include="..\..\Demo\subtools\health_tracking\*.cs" />
+		<Compile Include="..\..\Demo\utils\*.cs" />
+		<Compile Include="..\..\Demo\subtools\SubToolManager.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="../../logs/projectsAndTasksLogs.txt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="DocumentFormat.OpenXml" Version="3.4.1" />
+	</ItemGroup>
+
+</Project>
