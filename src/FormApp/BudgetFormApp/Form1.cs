@@ -15,7 +15,6 @@ namespace BudgetFormApp
     {
         // theme colors and fonts to match project and task manager
         private static readonly Color PrimaryBlue = Color.FromArgb(0, 120, 215);
-        private static readonly Color SelectedBlue = Color.FromArgb(0, 20, 215);
         private static readonly Color LightGray = Color.Gainsboro;
         private static readonly Font UiFont = new Font("Segoe UI", 10, FontStyle.Regular);
         private static readonly Font UiFontBold = new Font("Segoe UI", 10, FontStyle.Bold);
