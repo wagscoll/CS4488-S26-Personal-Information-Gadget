@@ -1,0 +1,13 @@
+PROJECT|2|NFA Project|True|False|9/27/2026 12:00:00 AM|7
+PROJECT|3|DFA Project|False|True|2/5/2026 12:00:00 AM|2
+PROJECT|5|Spanish Project|True|False|7/7/2026 9:50:00 PM|5
+PROJECT|6|German Project|False|False|4/4/2026 3:40:00 PM|2
+PROJECT|1|PIG Tool|True|False|5/8/2026 11:59:00 PM|100
+PROJECT|4|PIG Tool|True|True|2/9/2026 12:00:00 AM|20
+PROJECT|7|MGMT Project|True|True|2/16/2026 11:59:00 PM|10
+PROJECT|8|CS Homework|False|False|2/15/2026 11:59:00 PM|10
+TASK|1|Project and Task Management Sub-Tool|True|True|2/2/2026 12:00:00 AM|5|-1
+TASK|2|Budget Tool|True|True|2/2/2026 12:00:00 AM|0.3|-1
+TASK|3|Calorie Tracker|True|True|2/2/2026 12:00:00 AM|0.5|-1
+TASK|4|Homework for Printmaking|True|False|2/16/2026 11:00:00 PM|14|-1
+TASK|5|German Homework|False|False|8/9/1999 12:00:00 AM|0.1|6

@@ -1,0 +1,16 @@
+# .NET build 
+**/bin/
+**/obj/
+
+# IDE
+.vs/
+.vscode/
+
+
+Thumbs.db
+.DS_Store
+.vs/
+src/Demo/Output.docx
+src/logs/*.docx
+src/Demo/~$*.docx
+
