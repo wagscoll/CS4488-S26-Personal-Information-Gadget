@@ -18,7 +18,10 @@ namespace Demo_PIG_Tool
 
             BuildContentArea();
             BuildSidebar();
-            NavigateTo("Calories"); //update to include tasks and budget when those are implemented
+            //NavigateTo("Home");
+            NavigateTo("Calories");         //update to include tasks and budget when those are implemented
+            //NavigateTo("TaskManager");
+            //NavigateTo("BudgetTracker");
         }
 
         // Sidebar
@@ -77,7 +80,7 @@ namespace Demo_PIG_Tool
             btnTasks.TextAlign = ContentAlignment.MiddleLeft;
             btnTasks.Padding = new Padding(20, 0, 0, 0);
             btnTasks.UseVisualStyleBackColor = false;
-            btnTasks.Click += new EventHandler(btnTasks_Click); //  Placeholder for integrating Alex's task manager
+            btnTasks.Click += new EventHandler(btnTasks_Click); //Placeholder for integrating Alex's task manager
 
             btnBudget = new Button();
             btnBudget.Text = "Budget Tracker";
@@ -142,6 +145,30 @@ namespace Demo_PIG_Tool
             {
                 panel = new CalorieTrackerControl();
             }
+
+            /*      
+                    ~~~ INPUT TAKS SCREEN HERE ~~~
+    
+            else if (section == "Tasks")
+            {
+                panel = new ...
+            }
+            */
+
+
+
+
+
+            /*                            
+                    ~~~ Input Budget Screen Here ~~~
+
+            else if (section == "Budget")
+            { 
+                panel = new ...
+            }
+
+            */
+
             else
             {
                 Label placeholder = new Label();
