@@ -9,15 +9,12 @@ using Utils.Docx;
 
 namespace Demo_PIG_Tool.Manager
 {
-
-
     public static class SubToolManager
     {
         public static void Run()
         {
             while (true)
             {
-
                 Greetings();
                 ShowMenu();
 
@@ -26,7 +23,6 @@ namespace Demo_PIG_Tool.Manager
 
                 if (!int.TryParse(input, out int navigationChoice))
                 {
-
                     Console.WriteLine("Please enter a number (1-5). Press ENTER to try again.");
                     Console.ReadLine();
                     continue;
@@ -136,8 +132,8 @@ namespace Demo_PIG_Tool.Manager
 
             string healthPath = Path.Combine(basePath, "healthlogs.txt");
             string projectPath = Path.Combine(basePath, "projectsAndTasksLogs.txt");
-            // To add budget logs in the future when implemented
-            //string budgetPath = Path.Combine(basePath, "budgetlogs.txt"); 
+            string budgetPath = Path.Combine(basePath, "budgetlogs.txt"); 
+            string shoppingListPath = Path.Combine(basePath, "shoppingListLogs.txt");
 
             Console.WriteLine("--- Health Logs ---");
             PrintFileContents(healthPath);
@@ -145,11 +141,12 @@ namespace Demo_PIG_Tool.Manager
             Console.WriteLine("\n--- Projects and Tasks ---");
             PrintFileContents(projectPath);
 
-            // Uncomment the following lines when budget logs are implemented
-            /*
+
             Console.WriteLine("\n--- Budget Logs ---");
             PrintFileContents(budgetPath);
-            */
+
+            Console.WriteLine("\n--- Shopping List Logs ---");
+            PrintFileContents(shoppingListPath);
         }
 
         private static string GetHealthLogs()
@@ -178,14 +175,21 @@ namespace Demo_PIG_Tool.Manager
 
         private static string GetBudgetLogs()
         {
-            string basePath = Path.GetFullPath(
-                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
+            string basePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
 
-            string budgetPath = Path.Combine(basePath, "budgetlogs.txt");
+            string budgetPath = Path.Combine(basePath, "budgetLogs.txt");
+            string shoppingListPath = Path.Combine(basePath, "shoppingListLogs.txt");
 
-            return File.Exists(budgetPath)
-                ? ("--- Budget Logs ---\n" + File.ReadAllText(budgetPath))
-                : ("--- Budget Logs ---\n(Budget log file not found)");
+            if (File.Exists(budgetPath) && File.Exists(shoppingListPath))
+            {
+                string budgetLogs = File.ReadAllText(budgetPath);
+                string shoppingListLogs = File.ReadAllText(shoppingListPath);
+                return $"--- Budget Logs ---\n{budgetLogs}\n\n--- Shopping List Logs ---\n{shoppingListLogs}";
+            }
+            else
+            {
+                return "--- Budget Logs ---\n(Budget log file not found)";
+            }
         }
 
 

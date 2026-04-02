@@ -27,20 +27,20 @@ namespace Demo_PIG_Tool
             editPanel = new Panel();
             logFormTitleLabel = new Label();
             dateLabel = new Label();
-            dateValueLabel = new Label();
+            dateTextBox = new TextBox();
             weightLabel = new Label();
             weightTextBox = new TextBox();
             caloriesLabel = new Label();
             caloriesTextBox = new TextBox();
             saveButton = new Button();
             cancelButton = new Button();
+            editEntryButton = new Button();
+            deleteEntryButton = new Button();
             mainPanel.SuspendLayout();
             editPanel.SuspendLayout();
             SuspendLayout();
 
-            // 
             // mainPanel
-            // 
             mainPanel.BackColor = Color.FromArgb(240, 240, 240);
             mainPanel.Dock = DockStyle.Top;
             mainPanel.Location = new Point(0, 0);
@@ -49,9 +49,7 @@ namespace Demo_PIG_Tool
             mainPanel.TabIndex = 0;
             mainPanel.Paint += mainPanel_Paint;
 
-            // 
             // titleLabel
-            // 
             titleLabel.AutoSize = true;
             titleLabel.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             titleLabel.ForeColor = Color.FromArgb(0, 120, 215);
@@ -60,9 +58,7 @@ namespace Demo_PIG_Tool
             titleLabel.TabIndex = 0;
             titleLabel.Text = "Health Tracking Tool";
 
-            // 
             // viewLogsButton
-            // 
             viewLogsButton.BackColor = Color.FromArgb(0, 20, 215);
             viewLogsButton.FlatStyle = FlatStyle.Flat;
             viewLogsButton.Font = new Font("Segoe UI", 10F);
@@ -75,10 +71,8 @@ namespace Demo_PIG_Tool
             viewLogsButton.UseVisualStyleBackColor = false;
             viewLogsButton.Click += ViewLogsButton_Click;
 
-            // 
             // logTodayButton
-            // 
-            logTodayButton.BackColor = Color.FromArgb(0, 120, 215);
+            logTodayButton.BackColor = Color.FromArgb(0, 20, 215);
             logTodayButton.FlatStyle = FlatStyle.Flat;
             logTodayButton.Font = new Font("Segoe UI", 10F);
             logTodayButton.ForeColor = Color.White;
@@ -90,9 +84,33 @@ namespace Demo_PIG_Tool
             logTodayButton.UseVisualStyleBackColor = false;
             logTodayButton.Click += LogTodayButton_Click;
 
-            // 
+            // editEntryButton
+            editEntryButton.BackColor = Color.ForestGreen;
+            editEntryButton.FlatStyle = FlatStyle.Flat;
+            editEntryButton.Font = new Font("Segoe UI", 10F);
+            editEntryButton.ForeColor = Color.White;
+            editEntryButton.Location = new Point(340, 65);
+            editEntryButton.Name = "editEntryButton";
+            editEntryButton.Size = new Size(120, 35);
+            editEntryButton.TabIndex = 3;
+            editEntryButton.Text = "Edit Entry";
+            editEntryButton.UseVisualStyleBackColor = false;
+            editEntryButton.Click += EditEntryButton_Click;
+
+            // deleteEntryButton
+            deleteEntryButton.BackColor = Color.OrangeRed;
+            deleteEntryButton.FlatStyle = FlatStyle.Flat;
+            deleteEntryButton.Font = new Font("Segoe UI", 10F);
+            deleteEntryButton.ForeColor = Color.White;
+            deleteEntryButton.Location = new Point(470, 65);
+            deleteEntryButton.Name = "deleteEntryButton";
+            deleteEntryButton.Size = new Size(130, 35);
+            deleteEntryButton.TabIndex = 4;
+            deleteEntryButton.Text = "Delete Entry";
+            deleteEntryButton.UseVisualStyleBackColor = false;
+            deleteEntryButton.Click += DeleteEntryButton_Click;
+
             // editTipLabel
-            // 
             editTipLabel.AutoSize = true;
             editTipLabel.Font = new Font("Segoe UI", 8F);
             editTipLabel.ForeColor = Color.FromArgb(15, 15, 15);
@@ -102,9 +120,7 @@ namespace Demo_PIG_Tool
             editTipLabel.Text = "Your health log entries.";
             editTipLabel.Visible = false;
 
-            // 
             // listView
-            // 
             listView.Columns.AddRange(new ColumnHeader[] { dateColumn, weightColumn, caloriesColumn });
             listView.Dock = DockStyle.Fill;
             listView.FullRowSelect = true;
@@ -116,27 +132,19 @@ namespace Demo_PIG_Tool
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = View.Details;
 
-            // 
             // dateColumn
-            // 
             dateColumn.Text = "Date";
             dateColumn.Width = 160;
 
-            // 
             // weightColumn
-            // 
             weightColumn.Text = "Weight (lbs)";
             weightColumn.Width = 130;
 
-            // 
             // caloriesColumn
-            // 
             caloriesColumn.Text = "Calories";
             caloriesColumn.Width = 130;
 
-            // 
             // editPanel
-            // 
             editPanel.AutoScroll = true;
             editPanel.Controls.Add(cancelButton);
             editPanel.Controls.Add(saveButton);
@@ -144,7 +152,7 @@ namespace Demo_PIG_Tool
             editPanel.Controls.Add(caloriesLabel);
             editPanel.Controls.Add(weightTextBox);
             editPanel.Controls.Add(weightLabel);
-            editPanel.Controls.Add(dateValueLabel);
+            editPanel.Controls.Add(dateTextBox);
             editPanel.Controls.Add(dateLabel);
             editPanel.Controls.Add(logFormTitleLabel);
             editPanel.Dock = DockStyle.Fill;
@@ -154,9 +162,7 @@ namespace Demo_PIG_Tool
             editPanel.TabIndex = 1;
             editPanel.Visible = false;
 
-            // 
             // logFormTitleLabel
-            // 
             logFormTitleLabel.AutoSize = true;
             logFormTitleLabel.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             logFormTitleLabel.Location = new Point(20, 20);
@@ -164,61 +170,48 @@ namespace Demo_PIG_Tool
             logFormTitleLabel.TabIndex = 0;
             logFormTitleLabel.Text = "Log Today's Health Data";
 
-            // 
             // dateLabel
-            // 
             dateLabel.Location = new Point(20, 65);
             dateLabel.Name = "dateLabel";
             dateLabel.Size = new Size(150, 23);
             dateLabel.TabIndex = 1;
-            dateLabel.Text = "Date:";
+            dateLabel.Text = "Date (YYYY-MM-DD):";
 
-            // 
-            // dateValueLabel
-            // 
-            dateValueLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dateValueLabel.Location = new Point(180, 65);
-            dateValueLabel.Name = "dateValueLabel";
-            dateValueLabel.Size = new Size(300, 23);
-            dateValueLabel.TabIndex = 2;
 
-            // 
+            // dateTextBox
+            dateTextBox.Location = new Point(180, 62);
+            dateTextBox.Name = "dateTextBox";
+            dateTextBox.Size = new Size(120, 23);
+            dateTextBox.TabIndex = 2;
+
+             
             // weightLabel
-            // 
             weightLabel.Location = new Point(20, 100);
             weightLabel.Name = "weightLabel";
             weightLabel.Size = new Size(150, 23);
             weightLabel.TabIndex = 3;
             weightLabel.Text = "Weight (lbs):";
 
-            // 
             // weightTextBox
-            // 
             weightTextBox.Location = new Point(180, 97);
             weightTextBox.Name = "weightTextBox";
             weightTextBox.Size = new Size(300, 23);
             weightTextBox.TabIndex = 4;
 
-            // 
             // caloriesLabel
-            // 
             caloriesLabel.Location = new Point(20, 135);
             caloriesLabel.Name = "caloriesLabel";
             caloriesLabel.Size = new Size(150, 23);
             caloriesLabel.TabIndex = 5;
             caloriesLabel.Text = "Calories Consumed:";
 
-            // 
             // caloriesTextBox
-            // 
             caloriesTextBox.Location = new Point(180, 132);
             caloriesTextBox.Name = "caloriesTextBox";
             caloriesTextBox.Size = new Size(300, 23);
             caloriesTextBox.TabIndex = 6;
 
-            // 
             // saveButton
-            // 
             saveButton.BackColor = Color.FromArgb(0, 120, 215);
             saveButton.FlatStyle = FlatStyle.Flat;
             saveButton.ForeColor = Color.White;
@@ -230,9 +223,7 @@ namespace Demo_PIG_Tool
             saveButton.UseVisualStyleBackColor = false;
             saveButton.Click += saveButton_Click;
 
-            // 
             // cancelButton
-            // 
             cancelButton.BackColor = Color.Gray;
             cancelButton.FlatStyle = FlatStyle.Flat;
             cancelButton.ForeColor = Color.White;
@@ -244,15 +235,17 @@ namespace Demo_PIG_Tool
             cancelButton.UseVisualStyleBackColor = false;
             cancelButton.Click += cancelButton_Click;
 
-            // 
+            // mainPanel Controls
+            mainPanel.Controls.Add(titleLabel);
+            mainPanel.Controls.Add(viewLogsButton);
+            mainPanel.Controls.Add(logTodayButton);
+            mainPanel.Controls.Add(editEntryButton);
+            mainPanel.Controls.Add(deleteEntryButton);
+            mainPanel.Controls.Add(editTipLabel);
+
             // CalorieTrackerControl
-            // 
             Controls.Add(editPanel);
             Controls.Add(listView);
-            Controls.Add(viewLogsButton);
-            Controls.Add(logTodayButton);
-            Controls.Add(titleLabel);
-            Controls.Add(editTipLabel);
             Controls.Add(mainPanel);
             Name = "CalorieTrackerControl";
             Size = new Size(1000, 703);
@@ -262,6 +255,8 @@ namespace Demo_PIG_Tool
             ResumeLayout(false);
             PerformLayout();
         }
+
+
 
         #endregion
 
@@ -277,12 +272,14 @@ namespace Demo_PIG_Tool
         private Panel editPanel;
         private Label logFormTitleLabel;
         private Label dateLabel;
-        private Label dateValueLabel;
+        private TextBox dateTextBox;
         private TextBox weightTextBox;
         private TextBox caloriesTextBox;
         private Label weightLabel;
         private Label caloriesLabel;
         private Button saveButton;
         private Button cancelButton;
+        private Button editEntryButton;
+        private Button deleteEntryButton;
     }
 }

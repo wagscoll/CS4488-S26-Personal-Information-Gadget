@@ -109,7 +109,9 @@ namespace Utils.Docx
 
                 // Add a line break BETWEEN lines (not after the last line)
                 if (i < lines.Length - 1)
+                {
                     run.AppendChild(new Break());
+                }           
             }
         }
     }

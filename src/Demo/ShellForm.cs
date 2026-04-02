@@ -1,3 +1,5 @@
+using Demo_PIG_Tool.Manager;
+
 namespace Demo_PIG_Tool
 {
     public class ShellForm : Form
@@ -137,6 +139,9 @@ namespace Demo_PIG_Tool
         //  Navigation 
         private void NavigateTo(string section)
         {
+            SubToolManager.UpdateDocx();
+
+
             contentPanel.Controls.Clear();
 
             Control panel;

@@ -57,25 +57,25 @@ namespace Demo_PIG_Tool.HealthTool
 
                 switch (choice1)
                 {
-                    case 1:
-                        HealthText.ClearScreen();
+                    case 1: // display health logs
+                        HealthText.ClearScreen(); 
                         displayHealthLogs();
                         break;
-                    case 2:
+                    case 2: // input new health data
                         HealthText.ClearScreen();
                         inputNewHealthData();
                         break;
-                    case 3:
+                    case 3: 
                         HealthText.ClearScreen();
                         HealthText.FeatureComingSoon(); //////////////////////////////////////////////////// do this
                         terminalMenu();
                         break;
-                    case 4:
+                    case 4: // return to main menu
                         HealthText.ClearScreen();
                         HealthText.Greetings();
                         terminalMenu();
                         break;
-                    case 5:
+                    case 5: // exit health tool
                         SubToolManager.Run();
                         break;
                     default:
