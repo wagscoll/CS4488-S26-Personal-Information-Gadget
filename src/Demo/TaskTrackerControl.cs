@@ -3,6 +3,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using TextBox = System.Windows.Forms.TextBox;
 using ComboBox = System.Windows.Forms.ComboBox;
 using Button = System.Windows.Forms.Button;
+using Demo_PIG_Tool.Manager;
 namespace Demo_PIG_Tool
 {
     public partial class TaskTrackerControl : UserControl
@@ -73,6 +74,8 @@ namespace Demo_PIG_Tool
         // anh 3/2 - Refreshes the list view with the latest projects and tasks data, and toggles visibility of panels
         private void RefreshListView()
         {
+            saveChanges();
+            SubToolManager.UpdateDocx();
             listView.Items.Clear();
 
             foreach (var project in projects)
@@ -180,7 +183,6 @@ namespace Demo_PIG_Tool
                 }
 
                 tasks.Add(new UtilsTask(freshId("task"), taskName, isImportant, isUrgent, dueDate, hours, projId));
-                saveChanges();
                 MessageBox.Show("Task created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 RefreshListView();
                 listView.Visible = true;
@@ -258,7 +260,6 @@ namespace Demo_PIG_Tool
                 }
 
                 projects.Add(new UtilsProject(freshId("project"), projectName, isImportant, isUrgent, dueDate, hours));
-                saveChanges();
                 MessageBox.Show("Project created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 RefreshListView();
                 listView.Visible = true;
@@ -356,8 +357,6 @@ namespace Demo_PIG_Tool
                     projId = projects[projectCombo.SelectedIndex - 1].GetProjectId();
                 }
                 taskToEdit.updateProjectId(projId);
-
-                saveChanges();
                 MessageBox.Show("Task updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 RefreshListView();
                 listView.Visible = true;
@@ -373,7 +372,6 @@ namespace Demo_PIG_Tool
                 if (result == DialogResult.Yes)
                 {
                     tasks.Remove(taskToEdit);
-                    saveChanges();
                     MessageBox.Show("Task deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     RefreshListView();
                     listView.Visible = true;
@@ -447,8 +445,6 @@ namespace Demo_PIG_Tool
                 projectToEdit.updateIsUrgent(urgentCheckBox.Checked);
                 projectToEdit.updateDueDate(dueDatePicker.Value);
                 projectToEdit.updateEstimatedHours((float)hoursNumeric.Value);
-
-                saveChanges();
                 MessageBox.Show("Project updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 RefreshListView();
                 listView.Visible = true;
@@ -474,7 +470,6 @@ namespace Demo_PIG_Tool
                         tasks.Remove(task);
                     }
                     projects.Remove(projectToEdit);
-                    saveChanges();
                     MessageBox.Show("Project deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     RefreshListView();
                     listView.Visible = true;
@@ -488,7 +483,6 @@ namespace Demo_PIG_Tool
                         task.updateProjectId(-1);
                     }
                     projects.Remove(projectToEdit);
-                    saveChanges();
                     MessageBox.Show("Project deleted successfully! Related tasks are now independent.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     RefreshListView();
                     listView.Visible = true;
