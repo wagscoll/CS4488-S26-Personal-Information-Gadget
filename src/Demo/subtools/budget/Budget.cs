@@ -90,4 +90,10 @@ public class Budget
             category.Expenses.Add(expense);
         }
     }
+
+    // override ToString to display the month and year of the budget
+    public override string ToString()
+    {
+        return $"{Month}/{Year}";
+    }
 }

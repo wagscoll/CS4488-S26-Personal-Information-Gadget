@@ -136,8 +136,8 @@ namespace Demo_PIG_Tool.Manager
 
             string healthPath = Path.Combine(basePath, "healthlogs.txt");
             string projectPath = Path.Combine(basePath, "projectsAndTasksLogs.txt");
-            // To add budget logs in the future when implemented
-            //string budgetPath = Path.Combine(basePath, "budgetlogs.txt"); 
+            string budgetPath = Path.Combine(basePath, "budgetlogs.txt");
+            string shoppingPath = Path.Combine(basePath, "shoppingLogs.txt");
 
             Console.WriteLine("--- Health Logs ---");
             PrintFileContents(healthPath);
@@ -145,11 +145,11 @@ namespace Demo_PIG_Tool.Manager
             Console.WriteLine("\n--- Projects and Tasks ---");
             PrintFileContents(projectPath);
 
-            // Uncomment the following lines when budget logs are implemented
-            /*
             Console.WriteLine("\n--- Budget Logs ---");
             PrintFileContents(budgetPath);
-            */
+
+            Console.WriteLine("\n--- Shopping List Logs ---");
+            PrintFileContents(shoppingPath);
         }
 
         private static string GetHealthLogs()
@@ -181,21 +181,33 @@ namespace Demo_PIG_Tool.Manager
             string basePath = Path.GetFullPath(
                 Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
 
-            string budgetPath = Path.Combine(basePath, "budgetlogs.txt");
+            string budgetPath = Path.Combine(basePath, "budgetLogs.txt");
 
             return File.Exists(budgetPath)
                 ? ("--- Budget Logs ---\n" + File.ReadAllText(budgetPath))
                 : ("--- Budget Logs ---\n(Budget log file not found)");
         }
 
+        private static string GetShoppingLogs()
+        {
+            string basePath = Path.GetFullPath(
+                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "logs"));
+
+            string shoppingPath = Path.Combine(basePath, "shoppingLogs.txt");
+
+            return File.Exists(shoppingPath)
+                ? ("--- Shopping Logs ---\n" + File.ReadAllText(shoppingPath))
+                : ("--- Shopping Logs ---\n(Shopping log file not found)");
+        }
 
         public static void UpdateDocx()
         {
             string s1 = GetHealthLogs();
             string s2 = GetProjectLogs();
             string s3 = GetBudgetLogs();
+            string s4 = GetShoppingLogs();
 
-            string combined = s1 + "\n\n" + s2 + "\n\n" + s3;
+            string combined = s1 + "\n\n" + s2 + "\n\n" + s3 + "\n\n" + s4;
 
             try
             {
