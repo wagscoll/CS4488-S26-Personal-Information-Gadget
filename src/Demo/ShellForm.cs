@@ -21,8 +21,8 @@ namespace Demo_PIG_Tool
             BuildContentArea();
             BuildSidebar();
             //NavigateTo("Home");
-            NavigateTo("Calories");         //update to include tasks and budget when those are implemented
-            //NavigateTo("TaskManager");
+            //NavigateTo("Calories");         //update to include tasks and budget when those are implemented
+            NavigateTo("Tasks");
             //NavigateTo("BudgetTracker");
         }
 
@@ -151,14 +151,13 @@ namespace Demo_PIG_Tool
                 panel = new CalorieTrackerControl();
             }
 
-            /*      
-                    ~~~ INPUT TAKS SCREEN HERE ~~~
-    
+                  
+            
             else if (section == "Tasks")
             {
-                panel = new ...
+                panel = new TaskTrackerControl();
             }
-            */
+            
 
 
 
