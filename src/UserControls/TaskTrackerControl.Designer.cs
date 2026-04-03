@@ -149,6 +149,7 @@ namespace TaskTracker
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = View.Details;
             listView.DoubleClick += ListView_DoubleClick;
+            listView.ColumnClick += ListView_ColumnClick;
             // 
             // idColumn
             // 

@@ -16,16 +16,13 @@ namespace TaskTracker
         {
             InitializeComponent();
             loadData();
-            RefreshListView();
+            RefreshListView("date");
         }
         // anh 3/2 - Refreshes the list view panel and toggles visibility of panels
         //           and button colors to indicate which tab the user is on when the "View/Edit" button is clicked.
         private void ViewEditButton_Click(object sender, EventArgs e)
         {
-            RefreshListView();
-            listView.Visible = true;
-            editPanel.Visible = false;
-            schedulePanel.Visible = false;
+            RefreshListView("date");
             viewEditButton.BackColor = Color.FromArgb(0, 20, 215);
             createTaskButton.BackColor = Color.FromArgb(0, 120, 215);
             createProjectButton.BackColor = Color.FromArgb(0, 120, 215);
@@ -72,38 +69,325 @@ namespace TaskTracker
                 }
             }
         }
-        // anh 3/2 - Refreshes the list view with the latest projects and tasks data, and toggles visibility of panels
-        private void RefreshListView()
+        private void ListView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            saveChanges();
-            SubToolManager.UpdateDocx();
+            RefreshListView(listView.Columns[e.Column].Text);
+        }
+        // anh 3/2 - Refreshes the list view with the latest projects and tasks data, and toggles visibility of panels
+        private void RefreshListView(string order)
+        {
+            if (order == "date"){
+                viewEditButton.BackColor = Color.FromArgb(0, 20, 215);
+                createTaskButton.BackColor = Color.FromArgb(0, 120, 215);
+                createProjectButton.BackColor = Color.FromArgb(0, 120, 215);
+                twoWeeksButton.BackColor = Color.FromArgb(0, 120, 215);
+                editTipLabel.Visible = true;
+                listView.Visible = true;
+                editPanel.Visible = false;
+                schedulePanel.Visible = false;
+                saveChanges();
+                SubToolManager.UpdateDocx();
+            }
             listView.Items.Clear();
-
-            foreach (var project in projects)
+            UpdateHeaders(order);
+            if (order == "Due Date" || order == "date" || order == "*Due Date*")
             {
-                var item = new ListViewItem(project.GetProjectId().ToString());
-                item.SubItems.Add("PROJECT");
-                item.SubItems.Add(project.GetProjectName());
-                item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
-                item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
-                item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
-                item.SubItems.Add(project.getEstimatedHours().ToString());
-                item.SubItems.Add("-");
-                listView.Items.Add(item);
-            }
+                foreach (var project in projects.OrderBy(p => p.getDueDate()))
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
 
-            foreach (var task in tasks)
+                foreach (var task in tasks.OrderBy(t => t.getDueDate()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }else if (order == "ID" || order == "*ID*")
             {
-                var item = new ListViewItem(task.GetTaskId().ToString());
-                item.SubItems.Add("TASK");
-                item.SubItems.Add(task.GetTaskName());
-                item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
-                item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
-                item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
-                item.SubItems.Add(task.getEstimatedHours().ToString());
-                item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
-                listView.Items.Add(item);
+                foreach (var project in projects.OrderBy(p => p.GetProjectId()))
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks.OrderBy(t => t.GetTaskId()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
             }
+            else if (order == "Name" || order == "*Name*")
+            {
+                foreach (var project in projects.OrderBy(p => p.GetProjectName()))
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks.OrderBy(t => t.GetTaskName()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }
+            else if (order == "Important" || order == "*Important*")
+            {
+                foreach (var project in projects.OrderBy(p => p.getisImportant()))
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks.OrderBy(t => t.getisImportant()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }
+            else if (order == "Urgent" || order == "*Urgent*")
+            {
+                foreach (var project in projects.OrderBy(p => p.getisUrgent()))
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks.OrderBy(t => t.getisUrgent()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }
+            else if (order == "Est. Hours" || order == "*Est. Hours*")
+            {
+                foreach (var project in projects.OrderBy(p => p.getEstimatedHours()))
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks.OrderBy(t => t.getEstimatedHours()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }
+            else if (order == "Project ID" || order == "*Project ID*")
+            {
+                foreach (var project in projects)
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks.OrderBy(t => t.getProjectId()))
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }
+            else if (order == "Type" || order == "*Type*")
+            {
+                foreach (var project in projects)
+                {
+                    var item = new ListViewItem(project.GetProjectId().ToString());
+                    item.SubItems.Add("PROJECT");
+                    item.SubItems.Add(project.GetProjectName());
+                    item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (project.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(project.getEstimatedHours().ToString());
+                    item.SubItems.Add("-");
+                    listView.Items.Add(item);
+                }
+
+                foreach (var task in tasks)
+                {
+                    var item = new ListViewItem(task.GetTaskId().ToString());
+                    item.SubItems.Add("TASK");
+                    item.SubItems.Add(task.GetTaskName());
+                    item.SubItems.Add(task.getisImportant() ? "Yes" : "No");
+                    item.SubItems.Add(task.getisUrgent() ? "Yes" : "No");
+                    item.SubItems.Add(task.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    if (task.getDueDate() < DateTime.Now)
+                    {
+                        item.BackColor = Color.LightCoral;
+                    }
+                    item.SubItems.Add(task.getEstimatedHours().ToString());
+                    item.SubItems.Add(task.getProjectId() == -1 ? "-" : task.getProjectId().ToString());
+                    listView.Items.Add(item);
+                }
+            }
+        }
+        private void UpdateHeaders(string order)
+        {
+            idColumn.Text = order == "ID" || order == "*ID*" ? "*ID*" : "ID";
+            typeColumn.Text = order == "Type" || order == "*Type*" ? "*Type*" : "Type";
+            nameColumn.Text = order == "Name" || order == "*Name*" ? "*Name*" : "Name";
+            importantColumn.Text = order == "Important" || order == "*Important*" ? "*Important*" : "Important";
+            urgentColumn.Text = order == "Urgent" || order == "*Urgent*" ? "*Urgent*" : "Urgent";
+            dueDateColumn.Text = order == "Due Date" || order == "*Due Date*" || order == "date" ? "*Due Date*" : "Due Date";
+            hoursColumn.Text = order == "Est. Hours" || order == "*Est. Hours*" ? "*Est. Hours*" : "Est. Hours";
+            projectIdColumn.Text = order == "Project ID" || order == "*Project ID*" ? "*Project ID*" : "Project ID";
         }
         // anh 3/2 - Displays the form to create a new task with input fields for task attributes and toggles visibility of panels
         private void ShowCreateTaskForm()
@@ -184,11 +468,7 @@ namespace TaskTracker
                 }
 
                 tasks.Add(new UtilsTask(freshId("task"), taskName, isImportant, isUrgent, dueDate, hours, projId));
-                MessageBox.Show("Task created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RefreshListView();
-                listView.Visible = true;
-                editPanel.Visible = false;
-                schedulePanel.Visible = false;
+                RefreshListView("date");
             };
             editPanel.Controls.Add(saveButton);
 
@@ -261,11 +541,7 @@ namespace TaskTracker
                 }
 
                 projects.Add(new UtilsProject(freshId("project"), projectName, isImportant, isUrgent, dueDate, hours));
-                MessageBox.Show("Project created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RefreshListView();
-                listView.Visible = true;
-                editPanel.Visible = false;
-                schedulePanel.Visible = false;
+                RefreshListView("date");
             };
             editPanel.Controls.Add(saveButton);
 
@@ -358,11 +634,7 @@ namespace TaskTracker
                     projId = projects[projectCombo.SelectedIndex - 1].GetProjectId();
                 }
                 taskToEdit.updateProjectId(projId);
-                MessageBox.Show("Task updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RefreshListView();
-                listView.Visible = true;
-                editPanel.Visible = false;
-                schedulePanel.Visible = false;
+                RefreshListView("date");
             };
             editPanel.Controls.Add(saveButton);
 
@@ -373,11 +645,7 @@ namespace TaskTracker
                 if (result == DialogResult.Yes)
                 {
                     tasks.Remove(taskToEdit);
-                    MessageBox.Show("Task deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    RefreshListView();
-                    listView.Visible = true;
-                    editPanel.Visible = false;
-                    schedulePanel.Visible = false;
+                    RefreshListView("date");
                 }
             };
             editPanel.Controls.Add(deleteButton);
@@ -446,11 +714,7 @@ namespace TaskTracker
                 projectToEdit.updateIsUrgent(urgentCheckBox.Checked);
                 projectToEdit.updateDueDate(dueDatePicker.Value);
                 projectToEdit.updateEstimatedHours((float)hoursNumeric.Value);
-                MessageBox.Show("Project updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                RefreshListView();
-                listView.Visible = true;
-                editPanel.Visible = false;
-                schedulePanel.Visible = false;
+                RefreshListView("date");
             };
             editPanel.Controls.Add(saveButton);
 
@@ -471,11 +735,7 @@ namespace TaskTracker
                         tasks.Remove(task);
                     }
                     projects.Remove(projectToEdit);
-                    MessageBox.Show("Project deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    RefreshListView();
-                    listView.Visible = true;
-                    editPanel.Visible = false;
-                    schedulePanel.Visible = false;
+                    RefreshListView("date");
                 }
                 else if (result == DialogResult.No && relatedTasks.Count > 0)
                 {
@@ -485,10 +745,7 @@ namespace TaskTracker
                     }
                     projects.Remove(projectToEdit);
                     MessageBox.Show("Project deleted successfully! Related tasks are now independent.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    RefreshListView();
-                    listView.Visible = true;
-                    editPanel.Visible = false;
-                    schedulePanel.Visible = false;
+                    RefreshListView("date");
                 }
             };
             editPanel.Controls.Add(deleteButton);
