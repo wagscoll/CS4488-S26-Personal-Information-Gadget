@@ -19,11 +19,9 @@ public class SaveBudget {
             // loop through each Budget object in the list and write its details to the file
             foreach (Budget budget in budgets)
             {
-                sw.WriteLine("---BUDGET---");
                 sw.WriteLine("Month=" + budget.Month);
                 sw.WriteLine("Year=" + budget.Year);
                 sw.WriteLine("Income=" + budget.MonthlyIncome);
-                sw.WriteLine();
 
                 // loop through each Category in the Budget and write its details to the file
                 foreach (Category c in budget.Categories)
@@ -44,8 +42,8 @@ public class SaveBudget {
                             e.Date.ToString("yyyy-MM-dd")
                         );
                     }
-                    sw.WriteLine();
                 }
+                sw.WriteLine();
             }
         }
     }
