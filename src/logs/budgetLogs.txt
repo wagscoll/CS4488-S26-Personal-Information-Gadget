@@ -1,55 +1,38 @@
----BUDGET---
 Month=1
 Year=2026
 Income=5200
-
 Savings|1200|400|
 - 50|Groceries|2026-01-01
 - 100|Emergency Fund|2026-01-05
 - 250|Investment|2026-01-09
-
 Insurance|300|100|
 - 100|Car Insurance|2026-01-10
-
 Rent/Mortgage|1500|1500|
 - 1500|January Rent|2026-01-01
-
 Gas|220|150|
 - 60|Maverick|2026-01-07
 - 90|Shell|2026-01-14
-
 Food|650|510|
 - 200|Costco|2026-01-01
 - 300|Restaurants|2026-01-20
 - 10|Birthday Cake|2026-01-23
-
 Fun|300|275|
 - 75|Movies|2026-01-15
 - 200|Concert|2026-01-20
-
 Other|180|50|
 - 50|Clothes|2026-01-18
 
----BUDGET---
 Month=3
 Year=2026
 Income=1000
-
 Savings|700.00|0|
-
 Insurance|0|0|
-
 Rent/Mortgage|0|0|
-
 Gas|100.00|70|
 - 25|Maverick|2026-03-05
 - 45|Maverick|2026-03-19
-
 Food|200|60|
 - 60|Fuji|2026-03-30
-
 Fun|0|0|
-
 Other|0|5|
 - 5|Misc|2026-03-20
-
