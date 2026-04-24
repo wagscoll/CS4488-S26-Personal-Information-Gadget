@@ -93,8 +93,8 @@ public class ShoppingList
         string itemList = "";
         foreach (var item in Items)
         {
-            itemList += $"- {item.Name} ({item.Quantity} @ {item.Price:C} each) from {item.BestStore}: {item.TotalCost():C}\n";
+            itemList += $"- {item.Name} ({item.Quantity} @ {item.Price:C} each) from {item.BestStore}: {item.TotalCost():C}{Environment.NewLine}";
         }
-        return $"Shopping List: {Name}\nItems:\n{itemList}Total Cost: {TotalCost():C}";
+        return $"Shopping List: {Name}{Environment.NewLine}Items:{Environment.NewLine}{itemList}Total Cost: {TotalCost():C}";
     }
 }

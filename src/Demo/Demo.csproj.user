@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="..\UserControls\BudgetDialogs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="..\UserControls\BudgetTrackerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="..\UserControls\CalorieTrackerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="..\UserControls\ShoppingListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="..\UserControls\TaskTrackerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="ShellForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
