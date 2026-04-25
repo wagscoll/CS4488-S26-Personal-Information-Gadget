@@ -3,18 +3,10 @@ using Utils.Docx;
 using Demo_PIG_Tool;
 
 
-        //UPDATE DOCX can be called upon every subtool update
-        //to ensure the main docx file is always 
-        //up to date with the latest information
-        //NOT YET IMPLEMENTED IN SUBTOOLS
-
-        //install Docx/ODT Viewer Shahil Kumar from extension in VS Code 
-        //to view the created docx files in the file explorer\
-
-SubToolManager.UpdateDocx();
+SubToolManager.UpdateDocx();            // "Auto-save" - updates the docx file with the latest logs from all tools before launching the UI
 
 Application.EnableVisualStyles();
 Application.SetCompatibleTextRenderingDefault(false);
-Application.Run(new ShellForm());
+Application.Run(new ShellForm());       // Launches the main shell form, acting as a UI wrapper for the various tools
 
-SubToolManager.UpdateDocx();
+SubToolManager.UpdateDocx();            // "Auto-save" - updates the docx file with the latest logs from all tools after closing the UI

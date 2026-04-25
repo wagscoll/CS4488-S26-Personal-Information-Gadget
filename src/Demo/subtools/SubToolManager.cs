@@ -9,15 +9,12 @@ using Utils.Docx;
 
 namespace Demo_PIG_Tool.Manager
 {
-
-
     public static class SubToolManager
     {
         public static void Run()
         {
             while (true)
             {
-
                 Greetings();
                 ShowMenu();
 
@@ -26,7 +23,6 @@ namespace Demo_PIG_Tool.Manager
 
                 if (!int.TryParse(input, out int navigationChoice))
                 {
-
                     Console.WriteLine("Please enter a number (1-5). Press ENTER to try again.");
                     Console.ReadLine();
                     continue;
@@ -34,25 +30,33 @@ namespace Demo_PIG_Tool.Manager
 
                 switch (navigationChoice)
                 {
-
+                    // Runs the health tracking tool
                     case 1:
                         Health.Run();
                         break;
+
+                    // Runs the budget tracking tool
                     case 2:
                         Budget.Run();
                         break;
+
+                    // Runs the project and task management tool
                     case 3:
                         Project.Run();
                         break;
+
+                    //Print all logs to console
                     case 4:
-                        // View All Logs functionality added here
                         PrintAllLogs();
                         break;
+
+                    // Exiting the program
                     case 5:
                         Console.WriteLine("Exiting program. Goodbye!");
                         return;
+
                     default:
-                        Console.WriteLine("Invalid choice. Please select 1-4. Press ENTER to try again.");
+                        Console.WriteLine("Invalid choice. Please select 1-5. Press ENTER to try again.");
                         Console.ReadLine();
                         break;
                 }
@@ -62,6 +66,7 @@ namespace Demo_PIG_Tool.Manager
             }
         }
 
+        // DEPRECIATED - CLI Prototype
         public static void Greetings()
         {
             Console.Clear();
@@ -85,7 +90,7 @@ namespace Demo_PIG_Tool.Manager
             Console.ResetColor();
         }
 
-
+        // DEPRECIATED - CLI Prototype
         public static void ShowMenu()
         {
             //symbols from: https://stackoverflow.com/questions/71912239/c-sharp-console-is-outputting-box-characters-as
@@ -200,13 +205,16 @@ namespace Demo_PIG_Tool.Manager
                 : ("--- Shopping Logs ---\n(Shopping log file not found)");
         }
 
+
+        // ~ Collin Wagstaff
+        // UpdateDocx acts as an auto-save - it is called at the beginning and end of the program to ensure 
+        // that the Output.docx file is always up to date with the latest logs
         public static void UpdateDocx()
         {
             string s1 = GetHealthLogs();
             string s2 = GetProjectLogs();
             string s3 = GetBudgetLogs();
             string s4 = GetShoppingLogs();
-
             string combined = s1 + "\n\n" + s2 + "\n\n" + s3 + "\n\n" + s4;
 
             try
@@ -231,10 +239,5 @@ namespace Demo_PIG_Tool.Manager
                 Console.WriteLine("(Log file not found)");
             }
         }
-
-
-
-
-
     }
 }

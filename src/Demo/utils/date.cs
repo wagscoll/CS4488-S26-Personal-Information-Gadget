@@ -11,4 +11,16 @@ namespace Demo_PIG_Tool.Utils
             return currentDate;
         }
     }
+
+    public static class UtilsTime
+    {
+        public static string GetTime()
+        {
+            DateTime now = DateTime.Now;
+            string currentTime = now.ToString("HH:mm:ss");
+            return currentTime;
+        }
+    }
 }
+
+

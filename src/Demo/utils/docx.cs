@@ -5,12 +5,10 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Utils.Docx
 {
+    // Install Docx/ODT Viewer Shahil Kumar (extension) in VS Code 
+    // to view the created docx files in file explorer
     public static class Docx
     {
-
-        //install Docx/ODT Viewer Shahil Kumar from extension in VS Code 
-        //to view the created docx files in the file explore
-
         // This method creates a new .docx file at the specified path and writes the provided content into it.
         public static void WriteToDocx(string filePath, string content)
         {

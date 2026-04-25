@@ -6,6 +6,13 @@ using BudgetDialogs;
 
 namespace Demo_PIG_Tool
 {
+    /*
+        ~ Collin Wagstaff
+        ShellForm.cs acts as a wrapper for the various tools, providing a consistent UI and navigation.
+
+        It contains a sidebar for switching between tools and a main content area where the selected tool's interface is displayed. 
+        Each tool is implemented as a UserControl that gets loaded into the content area (center screen) when selected from the sidebar.
+    */
     public class ShellForm : Form
     {
         private Panel sidebarPanel;
@@ -30,7 +37,7 @@ namespace Demo_PIG_Tool
             NavigateTo("Home");
         }
 
-        // Sidebar
+        // Sidebar - Navigation between tools
         private void BuildSidebar()
         {
             sidebarPanel = new Panel();
