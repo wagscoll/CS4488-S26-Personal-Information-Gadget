@@ -167,7 +167,12 @@ namespace Demo_PIG_Tool
 
             Control panel;
 
-            if (section == "Calories")
+
+            if (section == "Home")
+            {
+                panel = new HomeControl();
+            }
+            else if (section == "Calories")
             {
                 panel = new CalorieTrackerControl();
             }
