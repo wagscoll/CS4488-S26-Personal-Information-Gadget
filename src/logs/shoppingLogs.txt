@@ -9,3 +9,8 @@ Shopping List: Mom's List
 Items:
 Total Cost: $0.00
 
+Shopping List: test
+Items:
+- testtt (1 @ $1.00 each) from testtt: $1.00
+Total Cost: $1.00
+
