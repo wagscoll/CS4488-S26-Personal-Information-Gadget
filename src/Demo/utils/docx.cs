@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 
-namespace Utils.Docx
+namespace Demo_PIG_Tool.Utils
 {
     // Install Docx/ODT Viewer Shahil Kumar (extension) in VS Code 
     // to view the created docx files in file explorer

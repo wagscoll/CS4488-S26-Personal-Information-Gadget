@@ -1,26 +1,18 @@
 using System;
+using System.Globalization;
 
 namespace Demo_PIG_Tool.Utils
 {
-
-    /*
     public static class InputValidation
     {
-        // TryParseExact - found at: https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tryparseexact?view=net-10.0
-        public static string ValidateDateInput(string input)
+        public static bool IsValidDate(string input)
         {
-            // Loops until the user enters a valid date in the format "yyyy-MM-dd". 
-            while (!DateTime.TryParseExact( input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            {
-                string? line = Console.ReadLine();
-                if (line == null)
-                    input = "";
-                else
-                    input = line;
-            }
+            return DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+        }
 
-            return input;
+        public static bool IsValidFloat(float value, float min = 0, float max = 100000)
+        {
+            return !float.IsNaN(value) && value >= min && value <= max;
         }
     }
-    */
 }
