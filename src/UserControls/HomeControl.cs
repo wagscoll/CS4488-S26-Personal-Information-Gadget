@@ -9,6 +9,7 @@ namespace Demo_PIG_Tool
     public class HomeControl : UserControl
     {
         // This control serves as the home/dashboard view of the Personal Information Gadget.
+        //It provides a nice interface with summary information so that the user may see what they have logged in each of the subtools at a glance, as well as a welcoming message and the current date.
         public HomeControl()
         {
             Dock = DockStyle.Fill;
