@@ -16,8 +16,9 @@ namespace Demo_PIG_Tool.Utils
         private string taskName = "";
         private int taskId;
         private int projectId;
+        private string notes = "";
 
-        public UtilsTask(int id, string taskName, bool isImportant, bool isUrgent, DateTime dueDate, float estimatedHours, int projectId)
+        public UtilsTask(int id, string taskName, bool isImportant, bool isUrgent, DateTime dueDate, float estimatedHours, int projectId, string notes)
         {
             this.taskId = id;
             this.taskName = taskName;
@@ -26,6 +27,7 @@ namespace Demo_PIG_Tool.Utils
             this.dueDate = dueDate;
             this.estimatedHours = estimatedHours;
             this.projectId = projectId;
+            this.notes = notes;
         }
 
         public void updateTaskName(string taskName)
@@ -51,6 +53,11 @@ namespace Demo_PIG_Tool.Utils
         public void updateProjectId(int projectId)
         {
             this.projectId = projectId;
+        }
+
+        public void updateNotes(string notes)
+        {
+            this.notes = notes;
         }
 
         public int GetTaskId()
@@ -83,6 +90,10 @@ namespace Demo_PIG_Tool.Utils
         public float getEstimatedHours()
         {
             return this.estimatedHours;
+        }
+        public string getNotes()
+        {
+            return this.notes;
         }
     }
 }

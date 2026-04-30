@@ -2,15 +2,18 @@ using System;
 using System.IO;
 using Health = Demo_PIG_Tool.HealthTool.HealthTool;
 using Budget = Demo_PIG_Tool.BudgetTool.BudgetDemo;
-using Project = Demo_PIG_Tool.ProjectTool.ProjectTool;
 using Demo_PIG_Tool.BudgetTool;
 using Demo_PIG_Tool.Utils;
+using System.Net;
 
 
 namespace Demo_PIG_Tool.Manager
 {
     public static class SubToolManager
     {
+
+        private static List<UtilsProject> projects = new();
+        private static List<UtilsTask> tasks = new();
         public static void Run()
         {
             // DEPRECIATED - CLI Prototype
@@ -43,7 +46,7 @@ namespace Demo_PIG_Tool.Manager
 
                     // Runs the project and task management tool
                     case 3:
-                        Project.Run();
+                        //Project.Run();
                         break;
 
                     //Print all logs to console
@@ -171,7 +174,56 @@ namespace Demo_PIG_Tool.Manager
                 return header + "(Health log file not found)";
             else return header + File.ReadAllText(healthPath); 
         }
+        //anh 4/30/26 - adds tags to projects and tasks output
+        private static string Tag(bool important, bool urgent)
+        {
+            string tag = "";
+            if (important) tag += " [I]";
+            if (urgent) tag += " [U]";
+            return tag;
+        }
+        //anh 4/30/26 - loads in the data from the logs file
+        private static void loadData(string path)
+        {
+            if (File.Exists(path))
+            {
+                using (StreamReader sr = File.OpenText(path))
+                {
+                    string s = "";
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        string[] entries = s.Split('|');
+                        if (entries[0] == "PROJECT")
+                        {
+                            projects.Add(new UtilsProject(
+                                int.Parse(entries[1]),
+                                entries[2],
+                                bool.Parse(entries[3]),
+                                bool.Parse(entries[4]),
+                                DateTime.Parse(entries[5]),
+                                float.Parse(entries[6]),
+                                entries[7]
+                            ));
+                        }
+                        else if (entries[0] == "TASK")
+                        {
+                            tasks.Add(new UtilsTask(
+                                int.Parse(entries[1]),
+                                entries[2],
+                                bool.Parse(entries[3]),
+                                bool.Parse(entries[4]),
+                                DateTime.Parse(entries[5]),
+                                float.Parse(entries[6]),
+                                int.Parse(entries[7]),
+                                entries[8]
+                            ));
+                        }
+                    }
+                }
+            }
+        }
 
+        //anh 4/30/26 - gets the data from the log file and then formats it in a user friendly way
         private static string GetProjectLogs()
         {
             string basePath = Path.GetFullPath(
@@ -179,10 +231,93 @@ namespace Demo_PIG_Tool.Manager
 
             string projectPath = Path.Combine(basePath, "projectsAndTasksLogs.txt");
 
-            if (!File.Exists(projectPath))
-                return "--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)";
-            else
-                return "--- Projects and Tasks Logs ---\n" + File.ReadAllText(projectPath);
+            if (!File.Exists(projectPath)) { return "--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)"; }
+
+            loadData(projectPath);
+
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("--- Projects and Tasks Logs ---");
+
+            var allDates = projects.Select(p => p.getDueDate().Date)
+                .Union(tasks.Select(t => t.getDueDate().Date))
+                .OrderBy(d => d);
+
+            foreach (var date in allDates)
+            {
+                sb.AppendLine($"{date:M/d/yyyy}");
+
+                var times = projects.Select(p => p.getDueDate())
+                    .Concat(tasks.Select(t => t.getDueDate()))
+                    .Where(d => d.Date == date)
+                    .Select(d => d.TimeOfDay)
+                    .Distinct()
+                    .OrderBy(t => t);
+
+                foreach (var time in times)
+                {
+                    sb.AppendLine($"\t{DateTime.Today.Add(time):hh:mm:ss tt}");
+
+                    // TASKS FIRST
+                    var tasksAtTime = tasks
+                        .Where(t => t.getDueDate().Date == date &&
+                                    t.getDueDate().TimeOfDay == time)
+                        .OrderByDescending(t => t.getisUrgent())
+                        .ThenByDescending(t => t.getisImportant())
+                        .ThenBy(t => t.GetTaskName());
+
+                    foreach (var task in tasksAtTime)
+                    {
+                        string projLabel = "";
+                        if (task.getProjectId() != -1)
+                        {
+                            var proj = projects.FirstOrDefault(p => p.GetProjectId() == task.getProjectId());
+                            if (proj != null)
+                                projLabel = $" (Task of {proj.GetProjectName()})";
+                        }
+
+                        sb.AppendLine($"\t\t{task.GetTaskName()}{projLabel}{Tag(task.getisImportant(), task.getisUrgent())}");
+                        sb.AppendLine($"\t\t\tEst. Hours: {task.getEstimatedHours()}");
+
+                        if (!string.IsNullOrWhiteSpace(task.getNotes()))
+                            sb.AppendLine($"\t\t\t{task.getNotes()}");
+                    }
+
+                    // PROJECTS
+                    var projectsAtTime = projects
+                        .Where(p => p.getDueDate().Date == date &&
+                                    p.getDueDate().TimeOfDay == time)
+                        .OrderByDescending(p => p.getisUrgent())
+                        .ThenByDescending(p => p.getisImportant())
+                        .ThenBy(p => p.GetProjectName());
+
+                    foreach (var proj in projectsAtTime)
+                    {
+                        sb.AppendLine($"\t\t{proj.GetProjectName()} [P]{Tag(proj.getisImportant(), proj.getisUrgent())}");
+                        sb.AppendLine($"\t\t\tEst. Hours: {proj.getEstimatedHours()}");
+
+                        if (!string.IsNullOrWhiteSpace(proj.getNotes()))
+                            sb.AppendLine($"\t\t\t{proj.getNotes()}");
+
+                        // SUB-TASKS
+                        var subTasks = tasks
+                            .Where(t => t.getProjectId() == proj.GetProjectId())
+                            .ToList();
+
+                        if (subTasks.Any())
+                        {
+                            sb.AppendLine("\t\t\tSub-Tasks:");
+                            foreach (var t in subTasks)
+                            {
+                                sb.AppendLine($"\t\t\t- {t.GetTaskName()}");
+                            }
+                        }
+                    }
+                }
+
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
         private static string GetBudgetLogs()
