@@ -152,19 +152,22 @@ namespace Demo_PIG_Tool
             contentPanel.Controls.Clear();              // Clear previous content
             Control panel;                              // Placeholder for the new panel to display
 
-            if (section == "Calories")
+            if (section == "Home")
+                panel = new HomeControl();
+
+            else if (section == "Calories")
                 panel = new CalorieTrackerControl();
-    
+
             else if (section == "Tasks")
                 panel = new TaskTrackerControl();
-   
+
             else if (section == "Budget")
                 panel = new BudgetControl();
 
             else if (section == "Shopping")
                 panel = new ShoppingListControl();
-            
-            else                                       // Default to home page with welcome message
+
+            else
             {
                 Label placeholder = new Label();
                 placeholder.Text = section + "\n\nComing soon...";
