@@ -13,6 +13,7 @@ namespace Demo_PIG_Tool.Manager
     {
         public static void Run()
         {
+            // DEPRECIATED - CLI Prototype
             while (true)
             {
                 Greetings();
@@ -164,9 +165,11 @@ namespace Demo_PIG_Tool.Manager
 
             string healthPath = Path.Combine(basePath, "healthlogs.txt");
 
-            return File.Exists(healthPath)
-                ? ("--- Health Logs ---\n" + File.ReadAllText(healthPath))
-                : ("--- Health Logs ---\n(Health log file not found)");
+            const string header = "--- Health Logs ---\nDate       | Weight  | Calories\n----------------------------------\n";
+
+            if (!File.Exists(healthPath))
+                return header + "(Health log file not found)";
+            else return header + File.ReadAllText(healthPath); 
         }
 
         private static string GetProjectLogs()
@@ -176,9 +179,10 @@ namespace Demo_PIG_Tool.Manager
 
             string projectPath = Path.Combine(basePath, "projectsAndTasksLogs.txt");
 
-            return File.Exists(projectPath)
-                ? ("--- Projects and Tasks Logs ---\n" + File.ReadAllText(projectPath))
-                : ("--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)");
+            if (!File.Exists(projectPath))
+                return "--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)";
+            else
+                return "--- Projects and Tasks Logs ---\n" + File.ReadAllText(projectPath);
         }
 
         private static string GetBudgetLogs()
@@ -188,9 +192,10 @@ namespace Demo_PIG_Tool.Manager
 
             string budgetPath = Path.Combine(basePath, "budgetLogs.txt");
 
-            return File.Exists(budgetPath)
-                ? ("--- Budget Logs ---\n" + File.ReadAllText(budgetPath))
-                : ("--- Budget Logs ---\n(Budget log file not found)");
+            if(!File.Exists(budgetPath))
+                return "--- Budget Logs ---\n(Budget log file not found)";
+             else
+                return "--- Budget Logs ---\n" + File.ReadAllText(budgetPath);
         }
 
         private static string GetShoppingLogs()
@@ -200,9 +205,10 @@ namespace Demo_PIG_Tool.Manager
 
             string shoppingPath = Path.Combine(basePath, "shoppingLogs.txt");
 
-            return File.Exists(shoppingPath)
-                ? ("--- Shopping Logs ---\n" + File.ReadAllText(shoppingPath))
-                : ("--- Shopping Logs ---\n(Shopping log file not found)");
+            if (!File.Exists(shoppingPath))
+                return "--- Shopping Logs ---\n(Shopping log file not found)";
+            else
+                return "--- Shopping Logs ---\n" + File.ReadAllText(shoppingPath);
         }
 
 
@@ -231,13 +237,9 @@ namespace Demo_PIG_Tool.Manager
         private static void PrintFileContents(string path)
         {
             if (File.Exists(path))
-            {
                 Console.WriteLine(File.ReadAllText(path));
-            }
             else
-            {
                 Console.WriteLine("(Log file not found)");
-            }
         }
     }
 }
