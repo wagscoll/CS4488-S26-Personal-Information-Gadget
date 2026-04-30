@@ -190,6 +190,8 @@ namespace Demo_PIG_Tool.Manager
                 using (StreamReader sr = File.OpenText(path))
                 {
                     string s = "";
+                    projects = new();
+                    tasks = new();
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] entries = s.Split('|');
