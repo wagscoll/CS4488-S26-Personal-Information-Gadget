@@ -100,10 +100,18 @@ namespace TaskTracker
                     item.SubItems.Add(project.getisImportant() ? "Yes" : "No");
                     item.SubItems.Add(project.getisUrgent() ? "Yes" : "No");
                     item.SubItems.Add(project.getDueDate().ToString("yyyy-MM-dd HH:mm"));
+                    FontStyle style = FontStyle.Regular;
+                    // Highlight overdue items in red and underline them, and bold important or urgent items
                     if (project.getDueDate() < DateTime.Now)
                     {
                         item.BackColor = Color.LightCoral;
+                        style = FontStyle.Underline;
                     }
+                    if (project.getisImportant() || project.getisUrgent())
+                    {
+                        style |= FontStyle.Bold;
+                    }
+                    item.Font = new Font(item.Font, style);
                     item.SubItems.Add(project.getEstimatedHours().ToString());
                     item.SubItems.Add("-");
                     listView.Items.Add(item);
