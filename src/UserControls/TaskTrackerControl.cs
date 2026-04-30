@@ -870,6 +870,8 @@ namespace TaskTracker
         // anh 3/2 - Saves the current state of projects and tasks to a log file
         private void saveChanges()
         {
+            SubToolManager.UpdateDocx();
+
             string path = GetProjectsAndTasksLogPath();
             using (StreamWriter sw = File.CreateText(path))
             {

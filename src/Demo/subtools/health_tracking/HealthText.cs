@@ -1,11 +1,12 @@
 using System;
 namespace Demo_PIG_Tool.Utils
 { 
+    // Most of this was utilized in the CLI prototype, but is now DEPRECIATED 
+    // as the health tracking tool has been revamped as a GUI application.
+
     public static class HealthText
     {
-
-
-        //For phase 1, early demo purposes, clears the CLI screen for better readability
+        //DEPRECIATED - CLI Prototype
         public static void ClearScreen()
         {
             Console.Clear();
@@ -15,6 +16,8 @@ namespace Demo_PIG_Tool.Utils
 
         }
 
+
+        //DEPRECIATED - CLI Prototype
         public static void Greetings()
         {
             ClearScreen();
@@ -32,11 +35,10 @@ namespace Demo_PIG_Tool.Utils
             Console.ResetColor();
         }
 
+        //DEPRECIATED - CLI Prototype       
         public static void ShowMenu()
         {
             //symbols from: https://stackoverflow.com/questions/71912239/c-sharp-console-is-outputting-box-characters-as
-
-
             string menuPrompt = 
             @"
               ╔════════════════════ MENU ════════════════════╗
@@ -74,6 +76,8 @@ namespace Demo_PIG_Tool.Utils
             
         }
 
+
+        //DEPRECIATED - CLI Prototype
         public static void FeatureComingSoon()
         {
             ClearScreen();

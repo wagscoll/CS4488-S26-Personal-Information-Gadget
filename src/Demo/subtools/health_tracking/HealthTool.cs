@@ -17,7 +17,8 @@ namespace Demo_PIG_Tool.HealthTool
 
         }
     
-        /*  1/28/26 - Collin
+        /*  
+            1/28/26 - Collin Wagstaff
 
         Work Flow:
             1. Run()
@@ -128,7 +129,7 @@ namespace Demo_PIG_Tool.HealthTool
                 HealthText.LogHealthData(2);
                 float currentWeight = float.Parse(Console.ReadLine());
 
-                if(!inputValidation(currentWeight))
+                if(!InputValidation.IsValidFloat(currentWeight))
                 {
                     Console.WriteLine("Invalid input. Please enter a valid number for weight.");
                     return getWeight();
@@ -141,7 +142,7 @@ namespace Demo_PIG_Tool.HealthTool
                 HealthText.LogHealthData(3);
                 float caloriesConsumed = float.Parse(Console.ReadLine());
 
-                if(!inputValidation(caloriesConsumed))
+                if(!InputValidation.IsValidFloat(caloriesConsumed))
                 {
                     Console.WriteLine("Invalid input. Please enter a valid number for calories consumed.");
                     return getCalories();
@@ -151,21 +152,6 @@ namespace Demo_PIG_Tool.HealthTool
             }
             /*---------------------------------------------------------------------------------------------------------*/
 
-            bool inputValidation(float value)
-            {
-
-                if(value < 0 || value > 100000)
-                {
-                    return false;
-                }
-
-                else if(float.IsNaN(value))
-                {
-                    return false;
-                }
-
-                return true;
-            }
 
 
             //---------------------------------------------Path & .txt Functions---------------------------------------------

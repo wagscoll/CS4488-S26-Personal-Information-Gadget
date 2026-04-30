@@ -12,6 +12,7 @@ using Demo_PIG_Tool.Manager;
 
 namespace BudgetTracker
 {
+    
     public partial class BudgetControl : UserControl
     {
         // helpers to load/save the budget
@@ -36,11 +37,15 @@ namespace BudgetTracker
             Dock = DockStyle.Fill;
             BuildUI();
             LoadData();
+            SubToolManager.UpdateDocx();
         }
 
         // builds the user interface with a header, top bar for budget selection and actions, and a split view for the list of expenses and budget summary
         private void BuildUI()
         {
+
+            SubToolManager.UpdateDocx();
+
             // make header panel
             mainPanel.BackColor = Color.FromArgb(240, 240, 240);
             mainPanel.Dock = DockStyle.Top;
@@ -157,6 +162,8 @@ namespace BudgetTracker
         // populate the ListView with all expenses for the selected budget and show a text summary of category totals
         private void RenderBudgetSummary()
         {
+            SubToolManager.UpdateDocx();
+
             var budget = GetSelectedBudget();
 
             // if no budget is selected, clear the ListView and show a message in the summary textbox
@@ -198,6 +205,9 @@ namespace BudgetTracker
         // load budgets from storage and populate the dropdown
         private void LoadData()
         {
+            SubToolManager.UpdateDocx();
+
+
             _allBudgets = _loadBudget.LoadBudgets();
 
             cboBudgets.Items.Clear();
@@ -206,12 +216,16 @@ namespace BudgetTracker
 
             if (cboBudgets.Items.Count > 0)
                 cboBudgets.SelectedIndex = 0;
+            
+
         }
 
 
         // refresh the dropdown with the current budgets and optionally select a specific budget
         private void RefreshBudgetDropdown(Budget? selectBudget = null)
         {
+            SubToolManager.UpdateDocx();
+
             cboBudgets.BeginUpdate();
             cboBudgets.DataSource = null;
             cboBudgets.DisplayMember = "";

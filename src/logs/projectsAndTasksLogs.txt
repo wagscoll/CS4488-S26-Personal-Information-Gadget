@@ -11,5 +11,4 @@ TASK|2|Budget Tool|True|True|2/2/2026 12:00:00 AM|0.3|-1
 TASK|3|Calorie Tracker|True|True|2/2/2026 12:00:00 AM|0.5|-1
 TASK|4|Homework for Printmaking|True|False|2/16/2026 11:00:00 PM|14|-1
 TASK|5|German Homework|False|False|8/9/1999 12:00:00 AM|0.1|6
-TASK|6|Something|False|False|4/28/2026 4:54:25 PM|2|-1
-TASK|7|Something Else|False|False|4/30/2026 4:54:39 PM|0|-1
+TASK|6|testtttt|True|True|4/29/2026 8:28:52 PM|1|-1

@@ -4,20 +4,18 @@ using Health = Demo_PIG_Tool.HealthTool.HealthTool;
 using Budget = Demo_PIG_Tool.BudgetTool.BudgetDemo;
 using Project = Demo_PIG_Tool.ProjectTool.ProjectTool;
 using Demo_PIG_Tool.BudgetTool;
-using Utils.Docx;
+using Demo_PIG_Tool.Utils;
 
 
 namespace Demo_PIG_Tool.Manager
 {
-
-
     public static class SubToolManager
     {
         public static void Run()
         {
+            // DEPRECIATED - CLI Prototype
             while (true)
             {
-
                 Greetings();
                 ShowMenu();
 
@@ -26,7 +24,6 @@ namespace Demo_PIG_Tool.Manager
 
                 if (!int.TryParse(input, out int navigationChoice))
                 {
-
                     Console.WriteLine("Please enter a number (1-5). Press ENTER to try again.");
                     Console.ReadLine();
                     continue;
@@ -34,25 +31,33 @@ namespace Demo_PIG_Tool.Manager
 
                 switch (navigationChoice)
                 {
-
+                    // Runs the health tracking tool
                     case 1:
                         Health.Run();
                         break;
+
+                    // Runs the budget tracking tool
                     case 2:
                         Budget.Run();
                         break;
+
+                    // Runs the project and task management tool
                     case 3:
                         Project.Run();
                         break;
+
+                    //Print all logs to console
                     case 4:
-                        // View All Logs functionality added here
                         PrintAllLogs();
                         break;
+
+                    // Exiting the program
                     case 5:
                         Console.WriteLine("Exiting program. Goodbye!");
                         return;
+
                     default:
-                        Console.WriteLine("Invalid choice. Please select 1-4. Press ENTER to try again.");
+                        Console.WriteLine("Invalid choice. Please select 1-5. Press ENTER to try again.");
                         Console.ReadLine();
                         break;
                 }
@@ -62,6 +67,7 @@ namespace Demo_PIG_Tool.Manager
             }
         }
 
+        // DEPRECIATED - CLI Prototype
         public static void Greetings()
         {
             Console.Clear();
@@ -85,7 +91,7 @@ namespace Demo_PIG_Tool.Manager
             Console.ResetColor();
         }
 
-
+        // DEPRECIATED - CLI Prototype
         public static void ShowMenu()
         {
             //symbols from: https://stackoverflow.com/questions/71912239/c-sharp-console-is-outputting-box-characters-as
@@ -159,9 +165,11 @@ namespace Demo_PIG_Tool.Manager
 
             string healthPath = Path.Combine(basePath, "healthlogs.txt");
 
-            return File.Exists(healthPath)
-                ? ("--- Health Logs ---\n" + File.ReadAllText(healthPath))
-                : ("--- Health Logs ---\n(Health log file not found)");
+            const string header = "--- Health Logs ---\nDate       | Weight  | Calories\n----------------------------------\n";
+
+            if (!File.Exists(healthPath))
+                return header + "(Health log file not found)";
+            else return header + File.ReadAllText(healthPath); 
         }
 
         private static string GetProjectLogs()
@@ -171,9 +179,10 @@ namespace Demo_PIG_Tool.Manager
 
             string projectPath = Path.Combine(basePath, "projectsAndTasksLogs.txt");
 
-            return File.Exists(projectPath)
-                ? ("--- Projects and Tasks Logs ---\n" + File.ReadAllText(projectPath))
-                : ("--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)");
+            if (!File.Exists(projectPath))
+                return "--- Projects and Tasks Logs ---\n(Projects and Tasks log file not found)";
+            else
+                return "--- Projects and Tasks Logs ---\n" + File.ReadAllText(projectPath);
         }
 
         private static string GetBudgetLogs()
@@ -183,9 +192,10 @@ namespace Demo_PIG_Tool.Manager
 
             string budgetPath = Path.Combine(basePath, "budgetLogs.txt");
 
-            return File.Exists(budgetPath)
-                ? ("--- Budget Logs ---\n" + File.ReadAllText(budgetPath))
-                : ("--- Budget Logs ---\n(Budget log file not found)");
+            if(!File.Exists(budgetPath))
+                return "--- Budget Logs ---\n(Budget log file not found)";
+             else
+                return "--- Budget Logs ---\n" + File.ReadAllText(budgetPath);
         }
 
         private static string GetShoppingLogs()
@@ -195,18 +205,22 @@ namespace Demo_PIG_Tool.Manager
 
             string shoppingPath = Path.Combine(basePath, "shoppingLogs.txt");
 
-            return File.Exists(shoppingPath)
-                ? ("--- Shopping Logs ---\n" + File.ReadAllText(shoppingPath))
-                : ("--- Shopping Logs ---\n(Shopping log file not found)");
+            if (!File.Exists(shoppingPath))
+                return "--- Shopping Logs ---\n(Shopping log file not found)";
+            else
+                return "--- Shopping Logs ---\n" + File.ReadAllText(shoppingPath);
         }
 
+
+        // ~ Collin Wagstaff
+        // UpdateDocx acts as an auto-save - it is called at the beginning and end of the program to ensure 
+        // that the Output.docx file is always up to date with the latest logs
         public static void UpdateDocx()
         {
             string s1 = GetHealthLogs();
             string s2 = GetProjectLogs();
             string s3 = GetBudgetLogs();
             string s4 = GetShoppingLogs();
-
             string combined = s1 + "\n\n" + s2 + "\n\n" + s3 + "\n\n" + s4;
 
             try
@@ -223,18 +237,9 @@ namespace Demo_PIG_Tool.Manager
         private static void PrintFileContents(string path)
         {
             if (File.Exists(path))
-            {
                 Console.WriteLine(File.ReadAllText(path));
-            }
             else
-            {
                 Console.WriteLine("(Log file not found)");
-            }
         }
-
-
-
-
-
     }
 }

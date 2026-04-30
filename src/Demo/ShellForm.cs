@@ -6,6 +6,13 @@ using BudgetDialogs;
 
 namespace Demo_PIG_Tool
 {
+    /*
+        ~ Collin Wagstaff
+        ShellForm.cs acts as a wrapper for the various tools, providing a consistent UI and navigation.
+
+        It contains a sidebar for switching between tools and a main content area where the selected tool's interface is displayed. 
+        Each tool is implemented as a UserControl that gets loaded into the content area (center screen) when selected from the sidebar.
+    */
     public class ShellForm : Form
     {
         private Panel sidebarPanel;
@@ -23,14 +30,12 @@ namespace Demo_PIG_Tool
             ClientSize = new System.Drawing.Size(1200, 703);
             MinimumSize = new System.Drawing.Size(800, 500);
 
-            BuildContentArea();
-            BuildSidebar();
-
-            // Start on home page
-            NavigateTo("Home");
+            BuildContentArea();       // Main content area
+            BuildSidebar();           // Navigation
+            NavigateTo("Home");       // Start on home page
         }
 
-        // Sidebar
+        // Sidebar - Navigation between tools
         private void BuildSidebar()
         {
             sidebarPanel = new Panel();
@@ -86,7 +91,7 @@ namespace Demo_PIG_Tool
             btnTasks.TextAlign = ContentAlignment.MiddleLeft;
             btnTasks.Padding = new Padding(20, 0, 0, 0);
             btnTasks.UseVisualStyleBackColor = false;
-            btnTasks.Click += new EventHandler(btnTasks_Click); //Placeholder for integrating Alex's task manager
+            btnTasks.Click += new EventHandler(btnTasks_Click);
 
             btnBudget = new Button();
             btnBudget.Text = "Budget Tracker";
@@ -100,7 +105,7 @@ namespace Demo_PIG_Tool
             btnBudget.TextAlign = ContentAlignment.MiddleLeft;
             btnBudget.Padding = new Padding(20, 0, 0, 0);
             btnBudget.UseVisualStyleBackColor = false;
-            btnBudget.Click += new EventHandler(btnBudget_Click); //Placeholder for Gabriel's budget tracker
+            btnBudget.Click += new EventHandler(btnBudget_Click);
 
             btnShopping = new Button();
             btnShopping.Text = "Shopping Lists";
@@ -114,7 +119,7 @@ namespace Demo_PIG_Tool
             btnShopping.TextAlign = ContentAlignment.MiddleLeft;
             btnShopping.Padding = new Padding(20, 0, 0, 0);
             btnShopping.UseVisualStyleBackColor = false;
-            btnShopping.Click += new EventHandler(btnShopping_Click); //Placeholder for Gabriel's shopping list tracker
+            btnShopping.Click += new EventHandler(btnShopping_Click);
 
             sidebarPanel.Controls.Add(btnBudget);
             sidebarPanel.Controls.Add(btnShopping);
@@ -126,30 +131,11 @@ namespace Demo_PIG_Tool
             Controls.Add(sidebarPanel);
         }
 
-        private void btnHome_Click(object sender, EventArgs e)
-        {
-            NavigateTo("Home");
-        }
-
-        private void btnCalories_Click(object sender, EventArgs e)
-        {
-            NavigateTo("Calories");
-        }
-
-        private void btnTasks_Click(object sender, EventArgs e)
-        {
-            NavigateTo("Tasks");
-        }
-
-        private void btnBudget_Click(object sender, EventArgs e)
-        {
-            NavigateTo("Budget");
-        }
-
-        private void btnShopping_Click(object sender, EventArgs e)
-        {
-            NavigateTo("Shopping");
-        }
+        private void btnHome_Click(object sender, EventArgs e)      { NavigateTo("Home"); }
+        private void btnCalories_Click(object sender, EventArgs e)  { NavigateTo("Calories"); }
+        private void btnTasks_Click(object sender, EventArgs e)     { NavigateTo("Tasks"); }
+        private void btnBudget_Click(object sender, EventArgs e)    { NavigateTo("Budget"); }
+        private void btnShopping_Click(object sender, EventArgs e)  { NavigateTo("Shopping"); }
 
         //  Content area 
         private void BuildContentArea()
@@ -163,38 +149,22 @@ namespace Demo_PIG_Tool
         //  Navigation 
         private void NavigateTo(string section)
         {
-            contentPanel.Controls.Clear();
+            contentPanel.Controls.Clear();              // Clear previous content
+            Control panel;                              // Placeholder for the new panel to display
 
-            Control panel;
-
-
-            if (section == "Home")
-            {
-                panel = new HomeControl();
-            }
-            else if (section == "Calories")
-            {
+            if (section == "Calories")
                 panel = new CalorieTrackerControl();
-            }
     
             else if (section == "Tasks")
-            {
                 panel = new TaskTrackerControl();
-            }
    
-
             else if (section == "Budget")
-            {
                 panel = new BudgetControl();
-            }
-
 
             else if (section == "Shopping")
-            {
                 panel = new ShoppingListControl();
-            }
-
-            else
+            
+            else                                       // Default to home page with welcome message
             {
                 Label placeholder = new Label();
                 placeholder.Text = section + "\n\nComing soon...";
@@ -207,7 +177,7 @@ namespace Demo_PIG_Tool
             panel.Dock = DockStyle.Fill;
             contentPanel.Controls.Add(panel);
 
-            UpdateSidebarHighlight(section);
+            UpdateSidebarHighlight(section);           // Highlight the active section in the sidebar
         }
 
         private void UpdateSidebarHighlight(string active)

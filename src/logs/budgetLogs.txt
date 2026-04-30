@@ -36,3 +36,27 @@ Food|200|60|
 Fun|0|0|
 Other|0|5|
 - 5|Misc|2026-03-20
+
+Month=4
+Year=2026
+Income=1200
+Savings|500|0|
+Insurance|400|0|
+Rent/Mortgage|50|0|
+Gas|1|0|
+Food|5|0|
+Fun|10|0|
+Other|10|6|
+- 6|fdssadf|2026-04-28
+
+Month=4
+Year=2026
+Income=0
+Savings|0|0|
+Insurance|0|0|
+Rent/Mortgage|0|0|
+Gas|0|0|
+Food|0|0|
+Fun|0|0|
+Other|0|0|
+
