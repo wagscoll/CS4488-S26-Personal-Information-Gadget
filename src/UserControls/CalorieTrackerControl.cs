@@ -78,10 +78,14 @@ namespace CalorieTracker
             return true;
         }
 
+        
+
         private void RefreshListView()
         {
             SubToolManager.UpdateDocx(); // Ensure we have the latest data before refreshing the view
             listView.Items.Clear();      // Clear existing entries to avoid duplicates
+
+            SetNavButton(viewLogsActive: true); 
 
             string healthLogs = getHealthLogs(); 
             if (string.IsNullOrWhiteSpace(healthLogs)) return;
@@ -113,17 +117,28 @@ namespace CalorieTracker
             SubToolManager.UpdateDocx();
         }
 
-        private void mainPanel_Paint(object sender, PaintEventArgs e) { }
-
         private void ShowLogForm(string date = "", string weight = "", string calories = "")
         {
-            dateTextBox.Text = string.IsNullOrEmpty(date) ? UtilsDate.GetDate() : date;
+            // if date, weight, and calories are provided, 
+            // we are editing an existing entry and will pre-fill the form with the existing data.
+            // Otherwise, we are logging a new entry and will show an 
+            // empty form with today's date pre-filled
+
+            if (!string.IsNullOrEmpty(date))
+                dateTextBox.Text = date;
+            else
+                dateTextBox.Text = UtilsDate.GetDate();
+            
             weightTextBox.Text = weight;
             caloriesTextBox.Text = calories;
+
+            // Show the edit panel and hide the list view
             listView.Visible = false;
             editPanel.Visible = true;
-            weightTextBox.Focus();
+            weightTextBox.Focus(); // Set focus to the weight input for quicker data entry, assuming date is correct
         }
+
+        private void mainPanel_Paint(object sender, PaintEventArgs e) { }
         // -- /Initialization ---------------------------------------------------------------------------------
 
 
@@ -219,7 +234,11 @@ namespace CalorieTracker
         string getHealthLogs()
         {
             string path = GetProjectHealthLogPath();
-            return File.Exists(path) ? File.ReadAllText(path) : "";
+
+            if (!File.Exists(path)) 
+                return "";
+
+            return File.ReadAllText(path);
         }
 
         void submitHealthData(string date, float weight, float calories)
