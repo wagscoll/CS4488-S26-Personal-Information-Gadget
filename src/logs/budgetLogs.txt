@@ -1,19 +1,11 @@
 Month=1
 Year=2026
 Income=5200
-Savings|1200|400|
-- 50|Groceries|2026-01-01
-- 100|Emergency Fund|2026-01-05
-- 250|Investment|2026-01-09
-Insurance|300|100|
-- 100|Car Insurance|2026-01-10
-Rent/Mortgage|1500|1500|
-- 1500|January Rent|2026-01-01
-Gas|220|150|
-- 60|Maverick|2026-01-07
-- 90|Shell|2026-01-14
-Food|650|510|
-- 200|Costco|2026-01-01
+Savings|1200|0|
+Insurance|300|0|
+Rent/Mortgage|1500|0|
+Gas|220|0|
+Food|650|310|
 - 300|Restaurants|2026-01-20
 - 10|Birthday Cake|2026-01-23
 Fun|300|275|
@@ -36,27 +28,4 @@ Food|200|60|
 Fun|0|0|
 Other|0|5|
 - 5|Misc|2026-03-20
-
-Month=4
-Year=2026
-Income=1200
-Savings|500|0|
-Insurance|400|0|
-Rent/Mortgage|50|0|
-Gas|1|0|
-Food|5|0|
-Fun|10|0|
-Other|10|6|
-- 6|fdssadf|2026-04-28
-
-Month=4
-Year=2026
-Income=0
-Savings|0|0|
-Insurance|0|0|
-Rent/Mortgage|0|0|
-Gas|0|0|
-Food|0|0|
-Fun|0|0|
-Other|0|0|
 

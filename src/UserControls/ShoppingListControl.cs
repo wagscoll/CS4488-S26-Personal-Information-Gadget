@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Demo_PIG_Tool.BudgetTool;
-using BudgetDialogs;
 using Demo_PIG_Tool.Manager;
 
 /* Author: Gabriel Ory
@@ -27,9 +26,10 @@ namespace ShoppingTracker
         private ComboBox cboLists = new();
         private Button btnCreateList = new();
         private Button btnAddItem = new();
-        private Button btnEditItem = new();
         private Button btnRemoveItem = new();
+        private Button btnDeleteList = new();
         private Panel mainPanel = new Panel();
+        private Panel editPanel = new Panel();
         private Label titleLabel = new Label();
         private ListView listViewSummary = new();
         private TextBox txtSummary = new();
@@ -90,25 +90,25 @@ namespace ShoppingTracker
 
             // button to add an item to a list
             btnAddItem.Text = "Add Item";
-            btnAddItem.Click += (_, __) => AddItemDialog();
+            btnAddItem.Click += (_, __) => ShowAddItemForm();
             BlueButton(btnAddItem);
-
-            // button to edit an item in a list (change quantity, price, or best store)
-            btnEditItem.Text = "Edit Item";
-            btnEditItem.Click += (_, __) => EditItemDialog();
-            BlueButton(btnEditItem);
 
             // button to remove an item from a list
             btnRemoveItem.Text = "Remove Item";
             btnRemoveItem.Click += (_, __) => RemoveItemDialog();
             RedButton(btnRemoveItem);
 
+            // button to delete the selected list
+            btnDeleteList.Text = "Delete List";
+            btnDeleteList.Click += (_, __) => DeleteList();
+            RedButton(btnDeleteList);
+
             top.Controls.Add(lbl);
             top.Controls.Add(cboLists);
             top.Controls.Add(btnCreateList);
             top.Controls.Add(btnAddItem);
-            top.Controls.Add(btnEditItem);
             top.Controls.Add(btnRemoveItem);
+            top.Controls.Add(btnDeleteList);
 
             // make a split container for ListView and TextBox
             var split = new SplitContainer
@@ -117,6 +117,12 @@ namespace ShoppingTracker
                 Orientation = Orientation.Horizontal,
                 SplitterDistance = 350
             };
+
+            // panel for editing an item (initially hidden, shown when adding/editing an item)
+            editPanel.Dock = DockStyle.Fill;
+            editPanel.Visible = false;
+            Controls.Add(editPanel);
+            editPanel.BringToFront();
 
             // customize ListView style
             listViewSummary = new ListView
@@ -139,7 +145,8 @@ namespace ShoppingTracker
                 new ColumnHeader { Text = "Total Cost", Width = 200 }
             });
 
-            split.Panel1.Controls.Add(listViewSummary);
+            // double-clicking an item in the ListView will open the edit form for that item
+            listViewSummary.DoubleClick += (_, __) => ShowEditItemForm();
 
             // customize TextBox style for the summary
             txtSummary.Dock = DockStyle.Fill;
@@ -149,13 +156,14 @@ namespace ShoppingTracker
             txtSummary.BackColor = Color.White;
             txtSummary.BorderStyle = BorderStyle.FixedSingle;
 
+            // add ListView and TextBox to the split container panels
+            split.Panel1.Controls.Add(listViewSummary);
             split.Panel2.Controls.Add(txtSummary);
 
             // add all panels to the main control
             Controls.Add(split);
             Controls.Add(top);
             Controls.Add(mainPanel);
-
         }
 
  
@@ -181,6 +189,16 @@ namespace ShoppingTracker
             b.Font = new Font("Segoe UI", 10F);
         }
 
+        // styling for the gray buttons
+        private static void GrayButton(Button b)
+        {
+            b.BackColor = Color.Gray;
+            b.ForeColor = Color.White;
+            b.FlatStyle = FlatStyle.Flat;
+            b.FlatAppearance.BorderSize = 0;
+            b.Size = new Size(130, 35);
+            b.Font = new Font("Segoe UI", 10F);
+        }
 
         // loads the shopping lists from storage and refreshes the UI
         private void LoadData()
@@ -225,56 +243,283 @@ namespace ShoppingTracker
             RenderListItems();
         }
 
-        // shows a dialog to add a new item to the selected shopping list, then saves and refreshes the UI
-        private void AddItemDialog()
+        // shows a form to add a new item to the selected shopping list, then saves and refreshes the UI
+        private void ShowAddItemForm()
         {
             var list = GetSelectedList();
+
+            // ensure a list is selected before showing the add item form
             if (list == null)
             {
-                MessageBox.Show(this, "Create/select a shopping list first.", "No List", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Select a list first.");
                 return;
             }
 
-            using var dlg = new GroceryAddForm();
-            if (dlg.ShowDialog() != DialogResult.OK) return;
+            // clear the edit panel and show it, hiding the main list view
+            editPanel.Controls.Clear();
+            editPanel.Visible = true;
+            listViewSummary.Parent.Visible = false;
 
-            list.AddItem(new Grocery(dlg.ItemName, dlg.BestStore, dlg.Price, dlg.Quantity));
-            SaveLists();
-            RenderListItems();
+            int y = 20;
+
+            // create title label for the form
+            var title = new Label
+            {
+                Text = "Add New Item",
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                Location = new Point(20, y),
+                AutoSize = true
+            };
+            editPanel.Controls.Add(title);
+            y += 40;
+
+            // create input for item name
+            var nameBox = new TextBox { Location = new Point(180, y), Width = 250 };
+            editPanel.Controls.Add(new Label { Text = "Item Name:", Location = new Point(20, y) });
+            editPanel.Controls.Add(nameBox);
+            y += 35;
+
+            // create input for best store
+            var storeBox = new TextBox { Location = new Point(180, y), Width = 250 };
+            editPanel.Controls.Add(new Label { Text = "Best Store:", Location = new Point(20, y) });
+            editPanel.Controls.Add(storeBox);
+            y += 35;
+
+            // create input for price
+            var priceBox = new NumericUpDown
+            {
+                Location = new Point(180, y),
+                Width = 120,
+                DecimalPlaces = 2,
+                Maximum = 10000
+            };
+            editPanel.Controls.Add(new Label { Text = "Price:", Location = new Point(20, y) });
+            editPanel.Controls.Add(priceBox);
+            y += 35;
+
+            // create input for quantity
+            var qtyBox = new NumericUpDown
+            {
+                Location = new Point(180, y),
+                Width = 120,
+                Maximum = 1000,
+                Value = 1
+            };
+            editPanel.Controls.Add(new Label { Text = "Quantity:", Location = new Point(20, y) });
+            editPanel.Controls.Add(qtyBox);
+            y += 50;
+
+            // create save button to save the new item to the list
+            var saveBtn = new Button
+            {
+                Text = "Add Item",
+                Location = new Point(180, y)
+            };
+            BlueButton(saveBtn);
+
+            // handle save button click by validating input, adding the new item to the list, saving, refreshing the UI, and closing the form
+            saveBtn.Click += (_, __) =>
+            {
+                if (string.IsNullOrWhiteSpace(nameBox.Text))
+                {
+                    MessageBox.Show("Item name is required.");
+                    return;
+                }
+
+                list.AddItem(new Grocery(
+                    nameBox.Text,
+                    storeBox.Text,
+                    (decimal)priceBox.Value,
+                    (int)qtyBox.Value
+                ));
+
+                SaveLists();
+                RenderListItems();
+
+                editPanel.Visible = false;
+                listViewSummary.Parent.Visible = true;
+            };
+            editPanel.Controls.Add(saveBtn);
+
+            // create cancel button to close the form without saving
+            var cancelBtn = new Button
+            {
+                Text = "Cancel",
+                Location = new Point(320, y)
+            };
+            GrayButton(cancelBtn);
+
+            // handle cancel button click by simply closing the form and showing the main list view again
+            cancelBtn.Click += (_, __) =>
+            {
+                editPanel.Visible = false;
+                listViewSummary.Parent.Visible = true;
+            };
+
+            editPanel.Controls.Add(cancelBtn);
         }
 
         // shows a dialog to remove an item from the selected shopping list, then saves and refreshes the UI
         private void RemoveItemDialog()
         {
             var list = GetSelectedList();
-            if (list == null) return;
+            var item = GetSelectedItem();
 
-            var name = Prompt("Remove Item", "Enter the name of the item to remove:");
-            if (string.IsNullOrWhiteSpace(name)) return;
+            // ensure an item from the list is selected
+            if (list == null || item == null)
+            {
+                MessageBox.Show(this, "Select an item first.", "No Selection",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
-            list.RemoveItem(name.Trim());
-            SaveLists();
-            RenderListItems();
+            // confirm with the user before deleting the item
+            var result = MessageBox.Show(
+                $"Delete '{item.Name}'?",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                list.RemoveItem(item.Name);
+                SaveLists();
+                RenderListItems();
+            }
         }
 
-        // shows a dialog to edit an item in the selected shopping list (change quantity, price, or best store), then saves and refreshes the UI
-        private void EditItemDialog()
+        // shows a form to edit an item in the selected shopping list (change quantity, price, or best store), then saves and refreshes the UI
+        private void ShowEditItemForm()
         {
             var list = GetSelectedList();
-            if (list == null) return;
+            var item = GetSelectedItem();
 
-            using var dlg = new GroceryEditForm();
-            if (dlg.ShowDialog() != DialogResult.OK) return;
+            // ensure an item from the list is selected before showing the edit form
+            if (list == null || item == null)
+            {
+                MessageBox.Show("Select an item first.");
+                return;
+            }
 
-            if (dlg.Action == GroceryEditAction.ChangeQuantity)
-                list.changeItemQuantity(dlg.TargetName, dlg.NewQuantity);
-            else if (dlg.Action == GroceryEditAction.ChangePrice)
-                list.changeItemPrice(dlg.TargetName, dlg.NewPrice);
-            else if (dlg.Action == GroceryEditAction.ChangeBestStore)
-                list.changeItemBestStore(dlg.TargetName, dlg.NewBestStore);
+            // clear the edit panel and show it, hiding the main list view
+            editPanel.Controls.Clear();
+            editPanel.Visible = true;
+            listViewSummary.Parent.Visible = false; 
 
-            SaveLists();
-            RenderListItems();
+            int y = 20;
+
+            // create title label for the form with the item name
+            var title = new Label
+            {
+                Text = $"Edit Item: {item.Name}",
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                Location = new Point(20, y),
+                AutoSize = true
+            };
+            editPanel.Controls.Add(title);
+            y += 40;
+
+            // create input for item name
+            var nameBox = new TextBox { Location = new Point(180, y), Width = 250, Text = item.Name };
+            editPanel.Controls.Add(new Label { Text = "Item Name:", Location = new Point(20, y) });
+            editPanel.Controls.Add(nameBox);
+            y += 35;
+
+            // create input for best store
+            var storeBox = new TextBox { Location = new Point(180, y), Width = 250, Text = item.BestStore };
+            editPanel.Controls.Add(new Label { Text = "Best Store:", Location = new Point(20, y) });
+            editPanel.Controls.Add(storeBox);
+            y += 35;
+
+            // create input for price
+            var priceBox = new NumericUpDown
+            {
+                Location = new Point(180, y),
+                Width = 120,
+                DecimalPlaces = 2,
+                Maximum = 10000,
+                Value = (decimal)item.Price
+            };
+            editPanel.Controls.Add(new Label { Text = "Price:", Location = new Point(20, y) });
+            editPanel.Controls.Add(priceBox);
+            y += 35;
+
+            // create input for quantity
+            var qtyBox = new NumericUpDown
+            {
+                Location = new Point(180, y),
+                Width = 120,
+                Maximum = 1000,
+                Value = item.Quantity
+            };
+            editPanel.Controls.Add(new Label { Text = "Quantity:", Location = new Point(20, y) });
+            editPanel.Controls.Add(qtyBox);
+            y += 50;
+
+            // create save button to save the changes to the item
+            var saveBtn = new Button
+            {
+                Text = "Save",
+                Location = new Point(180, y)
+            };
+            BlueButton(saveBtn);
+
+            // handle save button click by validating input, updating the item in the list, saving, refreshing the UI, and closing the form
+            saveBtn.Click += (_, __) =>
+            {
+                item.Name = nameBox.Text;
+                item.BestStore = storeBox.Text;
+                item.Price = (decimal)priceBox.Value;
+                item.Quantity = (int)qtyBox.Value;
+
+                SaveLists();
+                RenderListItems();
+
+                editPanel.Visible = false;
+                listViewSummary.Parent.Visible = true;
+            };
+            editPanel.Controls.Add(saveBtn);
+
+            // create delete button to remove the item from the list
+            var deleteBtn = new Button
+            {
+                Text = "Delete",
+                Location = new Point(320, y)
+            };
+            RedButton(deleteBtn);
+
+            // handle delete button click by confirming with the user, deleting the item from the list, saving, refreshing the UI, and closing the form
+            deleteBtn.Click += (_, __) =>
+            {
+                var confirm = MessageBox.Show("Delete item?", "Confirm", MessageBoxButtons.YesNo);
+                if (confirm == DialogResult.Yes)
+                {
+                    list.RemoveItem(item.Name);
+                    SaveLists();
+                    RenderListItems();
+
+                    editPanel.Visible = false;
+                    listViewSummary.Parent.Visible = true;
+                }
+            };
+            editPanel.Controls.Add(deleteBtn);
+
+            // create cancel button to close the form without saving
+            var cancelBtn = new Button
+            {
+                Text = "Cancel",
+                Location = new Point(460, y)
+            };
+            GrayButton(cancelBtn);
+
+            // handle cancel button click by simply closing the form and showing the main list view again
+            cancelBtn.Click += (_, __) =>
+            {
+                editPanel.Visible = false;
+                listViewSummary.Parent.Visible = true;
+            };
+
+            editPanel.Controls.Add(cancelBtn);
         }
 
         // renders the items of the selected shopping list in the ListView and updates the text summary
@@ -295,6 +540,7 @@ namespace ShoppingTracker
             foreach (var item in list.Items)
             {
                 var lvi = new ListViewItem(item.Name);
+                lvi.Tag = item; 
                 lvi.SubItems.Add(item.BestStore);
                 lvi.SubItems.Add(item.Price.ToString("C"));
                 lvi.SubItems.Add(item.Quantity.ToString());
@@ -309,22 +555,74 @@ namespace ShoppingTracker
         // helper to get the currently selected shopping list from the dropdown
         private ShoppingList? GetSelectedList() => cboLists.SelectedItem as ShoppingList;
 
+        // helper to get the currently selected grocery item from the ListView
+        private Grocery? GetSelectedItem()
+        {
+            if (listViewSummary.SelectedItems.Count == 0)
+                return null;
+
+            return listViewSummary.SelectedItems[0].Tag as Grocery;
+        }
+
         // helper to refresh the shopping list dropdown, optionally selecting a specific list
         private void RefreshListDropdown(ShoppingList? selectList = null)
         {
+            // refresh the dropdown with the current list of shopping lists
             cboLists.BeginUpdate();
             cboLists.DataSource = null;
             cboLists.DisplayMember = "Name";
             cboLists.DataSource = _allShoppingLists.ToList();
             cboLists.EndUpdate();
 
-            if (selectList != null) cboLists.SelectedItem = selectList;
-            else if (_allShoppingLists.Count > 0) cboLists.SelectedIndex = 0;
+            // if there are no lists, clear the ListView and summary and show a message
+            if (_allShoppingLists.Count == 0)
+            {
+                listViewSummary.Items.Clear();
+                txtSummary.Text = "No shopping list available.";
+                return;
+            }
+
+            // select the provided list or default to the first one
+            if (selectList != null)
+                cboLists.SelectedItem = selectList;
+            else
+                cboLists.SelectedIndex = 0;
         }
 
-        // helper to show a simple prompt dialog with a title and message, returning the user input or null if cancelled
+        // helper to delete the currently selected shopping list 
+        private void DeleteList()
+        {
+            var list = GetSelectedList();
+
+            // ensure a list is selected before attempting to delete
+            if (list == null)
+            {
+                MessageBox.Show("Select a shopping list first.");
+                return;
+            }
+
+            // confirm with the user before deleting the list
+            var result = MessageBox.Show(
+                $"Delete shopping list '{list.Name}'?\n\nThis cannot be undone.",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+            if (result != DialogResult.Yes)
+                return;
+            _allShoppingLists.Remove(list);
+
+            // save the updated lists and refresh the dropdown and ListView to reflect the deletion
+            SaveLists();
+            RefreshListDropdown();
+            RenderListItems();
+        }
+
+
+        // helper to show a dialog for creating a new shopping list, returning the user input or null if cancelled
         private static string? Prompt(string title, string message)
         {
+            // create a new form to prompt the user for input
             using var form = new Form
             {
                 Text = title,
@@ -336,23 +634,19 @@ namespace ShoppingTracker
                 MaximizeBox = false,
             };
 
+            // add a label for the shopping list name and a textbox for user input
             var lbl = new Label { Left = 12, Top = 12, Width = 480, Text = message };
             var txt = new TextBox { Left = 12, Top = 40, Width = 480 };
 
+            // add OK and Cancel buttons to the form
             var panel = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 54, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(12) };
             var ok = new Button { Text = "OK", DialogResult = DialogResult.OK, Width = 110, Height = 36 };
             var cancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Width = 110, Height = 36 };
 
-            ok.BackColor = Color.FromArgb(0, 120, 215);
-            ok.ForeColor = Color.White;
-            ok.FlatStyle = FlatStyle.Flat;
-            ok.FlatAppearance.BorderSize = 0;
+            BlueButton(ok);
+            GrayButton(cancel);
 
-            cancel.BackColor = Color.Gray;
-            cancel.ForeColor = Color.White;
-            cancel.FlatStyle = FlatStyle.Flat;
-            cancel.FlatAppearance.BorderSize = 0;
-
+            // add the buttons to the panel and the panel, label, and textbox to the form
             panel.Controls.Add(ok);
             panel.Controls.Add(cancel);
             form.Controls.Add(panel);

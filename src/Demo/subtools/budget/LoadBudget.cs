@@ -89,7 +89,8 @@ public class LoadBudget
                         var category = budget.Categories[categoryIndex - 1];
                         string categoryName = category.Name;
 
-                        category.Expenses.Add(new Expense(date, description, amount, categoryName));
+                        var id = category.Expenses.Count + 1; // assign a unique ID based on the number of existing expenses
+                        category.Expenses.Add(new Expense(id, date, description, amount, categoryName));
                     }
 
                     lineIndex++;

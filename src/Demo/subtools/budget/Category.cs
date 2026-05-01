@@ -16,8 +16,11 @@ namespace Demo_PIG_Tool.BudgetTool;
         public decimal CategoryBudget { get; set; }
         public List<Expense> Expenses { get; }
 
-        // constructor initializes the category with a name, a budget, and an empty list of expenses
-        public Category(string name)
+        private int _nextExpenseId = 1;
+
+
+    // constructor initializes the category with a name, a budget, and an empty list of expenses
+    public Category(string name)
         {   
             this.Name = name;
             this.CategoryBudget = 0;
@@ -40,5 +43,13 @@ namespace Demo_PIG_Tool.BudgetTool;
         {
             return CategoryBudget - MoneySpent();
         }
-    }
+
+        // adds an expense to the category and assigns it a unique ID
+        public void AddExpense(Expense expense)
+        {
+            expense.Id = _nextExpenseId++;
+            Expenses.Add(expense);
+        }
+
+}
 

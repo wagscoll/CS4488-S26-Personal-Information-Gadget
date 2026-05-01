@@ -2,9 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="..\UserControls\BudgetDialogs.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="..\UserControls\BudgetTrackerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -22,6 +19,9 @@
     </Compile>
     <Compile Update="ShellForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="subtools\budget\BudgetCreatePanel.cs">
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
 </Project>
