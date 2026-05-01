@@ -38,7 +38,6 @@ namespace TaskTracker
             editTipLabel = new Label();
             listPanel = new Panel();
             listView = new ListView();
-            idColumn = new ColumnHeader();
             typeColumn = new ColumnHeader();
             nameColumn = new ColumnHeader();
             importantColumn = new ColumnHeader();
@@ -46,6 +45,7 @@ namespace TaskTracker
             dueDateColumn = new ColumnHeader();
             hoursColumn = new ColumnHeader();
             projectIdColumn = new ColumnHeader();
+            notesColumn = new ColumnHeader();
             editPanel = new Panel();
             schedulePanel = new Panel();
             scheduleTextBox = new TextBox();
@@ -138,7 +138,7 @@ namespace TaskTracker
             // 
             // listView
             // 
-            listView.Columns.AddRange(new ColumnHeader[] { idColumn, typeColumn, nameColumn, importantColumn, urgentColumn, dueDateColumn, hoursColumn, projectIdColumn });
+            listView.Columns.AddRange(new ColumnHeader[] { typeColumn, nameColumn, importantColumn, urgentColumn, dueDateColumn, hoursColumn, projectIdColumn, notesColumn });
             listView.Dock = DockStyle.Fill;
             listView.FullRowSelect = true;
             listView.GridLines = true;
@@ -150,11 +150,6 @@ namespace TaskTracker
             listView.View = View.Details;
             listView.DoubleClick += ListView_DoubleClick;
             listView.ColumnClick += ListView_ColumnClick;
-            // 
-            // idColumn
-            // 
-            idColumn.Text = "ID";
-            idColumn.Width = 50;
             // 
             // typeColumn
             // 
@@ -190,6 +185,11 @@ namespace TaskTracker
             // 
             projectIdColumn.Text = "Project ID";
             projectIdColumn.Width = 80;
+            // 
+            // notesColumn
+            // 
+            notesColumn.Text = "Notes";
+            notesColumn.Width = 80;
             // 
             // editPanel
             // 
@@ -271,7 +271,6 @@ namespace TaskTracker
         private Button createProjectButton;
         private Panel listPanel;
         private ListView listView;
-        private ColumnHeader idColumn;
         private ColumnHeader typeColumn;
         private ColumnHeader nameColumn;
         private ColumnHeader importantColumn;
@@ -279,6 +278,7 @@ namespace TaskTracker
         private ColumnHeader dueDateColumn;
         private ColumnHeader hoursColumn;
         private ColumnHeader projectIdColumn;
+        private ColumnHeader notesColumn;
         private Panel editPanel;
         private Panel schedulePanel;
         private TextBox scheduleTextBox;

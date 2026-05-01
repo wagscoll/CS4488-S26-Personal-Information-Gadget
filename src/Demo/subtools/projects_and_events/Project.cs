@@ -16,13 +16,15 @@ namespace Demo_PIG_Tool.Utils
         private float estimatedHours;
         private string projectName = "";
         private int projectId;
+        private string notes = "";
 
-        public UtilsProject(int id, string name, bool isImportant, bool isUrgent, DateTime dueDate, float estimatedHours)
+        public UtilsProject(int id, string name, bool isImportant, bool isUrgent, DateTime dueDate, float estimatedHours, string notes)
         {
             this.projectId = id;
             this.projectName = name;
             this.isImportant = isImportant;
             this.isUrgent = isUrgent;
+            this.notes = notes;
             this.dueDate = dueDate;
             this.estimatedHours = estimatedHours;
         }
@@ -46,6 +48,10 @@ namespace Demo_PIG_Tool.Utils
         public void updateEstimatedHours(float estimatedHours)
         {
             this.estimatedHours = estimatedHours;
+        }
+        public void updateNotes(string notes)
+        {
+            this.notes = notes;
         }
 
         public int GetProjectId()
@@ -72,6 +78,10 @@ namespace Demo_PIG_Tool.Utils
         public float getEstimatedHours()
         {
             return this.estimatedHours;
+        }
+        public string getNotes()
+        {
+            return this.notes;
         }
 
     }

@@ -11,6 +11,9 @@
     <Compile Update="..\UserControls\CalorieTrackerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="..\UserControls\HomeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="..\UserControls\ShoppingListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
