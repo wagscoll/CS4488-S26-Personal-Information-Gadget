@@ -116,8 +116,15 @@ namespace Demo_PIG_Tool.BudgetTool;
                             " If the entered category does not match one of the default categories, the expense is added to Other.)");
                         string categoryName = Console.ReadLine();
 
-                        // add the expense to the selected budget
-                        budget.AddExpense(new Expense(date, description, amount, categoryName));
+                        // assign unique ID
+                        var id = budget.Categories
+                        .SelectMany(c => c.Expenses)
+                        .Select(e => e.Id)
+                        .DefaultIfEmpty(0)
+                        .Max() + 1;
+
+                    // add the expense to the selected budget
+                    budget.AddExpense(new Expense(id, date, description, amount, categoryName));
                         Console.WriteLine("The expense was added. \n");
                     }
                 }

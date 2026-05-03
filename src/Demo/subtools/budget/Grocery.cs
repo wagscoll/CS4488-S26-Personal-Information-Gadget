@@ -7,7 +7,7 @@ namespace Demo_PIG_Tool.BudgetTool;
 
 public class Grocery
 {
-    public string Name { get; } = "";
+    public string Name { get; set; } = "";
     public string BestStore { get; set;} = "";
     public decimal Price { get; set;}
     public int Quantity { get; set; }

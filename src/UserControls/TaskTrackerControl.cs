@@ -403,6 +403,7 @@ namespace TaskTracker
 
                 projects.Add(new UtilsProject(freshId("project"), projectName, isImportant, isUrgent, dueDate, hours, notes));
                 RefreshListView("date");
+                saveChanges();
             };
             editPanel.Controls.Add(saveButton);
 
@@ -503,6 +504,7 @@ namespace TaskTracker
                 }
                 taskToEdit.updateProjectId(projId);
                 RefreshListView("date");
+                saveChanges();
             };
             editPanel.Controls.Add(saveButton);
 
@@ -514,6 +516,7 @@ namespace TaskTracker
                 {
                     tasks.Remove(taskToEdit);
                     RefreshListView("date");
+                    saveChanges();
                 }
             };
             editPanel.Controls.Add(deleteButton);
@@ -590,6 +593,7 @@ namespace TaskTracker
                 projectToEdit.updateEstimatedHours((float)hoursNumeric.Value);
                 projectToEdit.updateNotes(notesTextBox.Text);
                 RefreshListView("date");
+                saveChanges();
             };
             editPanel.Controls.Add(saveButton);
 
@@ -621,6 +625,7 @@ namespace TaskTracker
                     projects.Remove(projectToEdit);
                     MessageBox.Show("Project deleted successfully! Related tasks are now independent.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     RefreshListView("date");
+                    saveChanges();
                 }
             };
             editPanel.Controls.Add(deleteButton);

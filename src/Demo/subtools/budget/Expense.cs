@@ -10,13 +10,15 @@ namespace Demo_PIG_Tool.BudgetTool;
 
 public class Expense
 {
-    public DateTime Date { get; }
-    public string Description { get; } = "";
-    public decimal Amount { get; }
-    public string CategoryName { get; } = "";
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+    public string Description { get; set; } = "";
+    public decimal Amount { get; set; }
+    public string CategoryName { get; set; } = "";
 
-    public Expense(DateTime date, string description, decimal amount, string categoryName)
+    public Expense(int id, DateTime date, string description, decimal amount, string categoryName)
     {
+        this.Id = id;
         this.Date = date;
         this.Description = description;
         this.Amount = amount;
